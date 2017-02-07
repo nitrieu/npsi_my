@@ -38,32 +38,34 @@ int main(int argc, char** argv)
 	//return 0;
 	//OPPRFnt_EmptrySet_Test_Main();
 	std::vector<block> mSet;
-	 u64 setSize = 1 << 16, psiSecParam = 40, bitSize = 128;
-	 u64 nParties = 3;
-	 u64 tParties=2;
+	 u64 setSize = 1 << 20, psiSecParam = 40, bitSize = 128;
+	 u64 nParties, tParties;
 	 PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 	 mSet.resize(setSize);
 	 for (u64 i = 0; i < setSize; ++i)
 		 mSet[i] = prng.get<block>();
 
-	 if (argc == 5) {
+	 if (argc == 7) {
 		 if (argv[1][0] == '-' && argv[1][1] == 'n')
 			 nParties = atoi(argv[2]);
 
+		 if (argv[3][0] == '-' && argv[3][1] == 't')
+			 tParties = atoi(argv[4]);
+
 		 if (nParties == 3)
 		 {
-			 if (argv[3][0] == '-' && argv[3][1] == 'p') {
-				 u64 pIdx = atoi(argv[4]);
+			 if (argv[5][0] == '-' && argv[5][1] == 'p') {
+				 u64 pIdx = atoi(argv[6]);
 
 				 party3(pIdx, setSize, mSet);
 			 }
 		 }
 		 else
 		 {
-			 if (argv[3][0] == '-' && argv[3][1] == 'p') {
-				 u64 pIdx = atoi(argv[4]);
+			 if (argv[5][0] == '-' && argv[5][1] == 'p') {
+				 u64 pIdx = atoi(argv[6]);
 				 std::cout << "pIdx:  " << pIdx << "\n";
-				 tparty(pIdx, nParties, tParties, mSet.size(), mSet,1);
+				 tparty(pIdx, nParties, tParties, mSet.size(), mSet,2);
 			 }
 		 }
 		 	 

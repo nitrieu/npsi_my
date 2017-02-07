@@ -2093,19 +2093,26 @@ bool is_in_dual_area(u64 startIdx, u64 endIdx, u64 numIdx, u64 checkIdx) {
 //leader is n-1
 void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<block>& mSet, u64 nTrials)
 {
+	std::fstream runtime;
+	u64 leaderIdx = nParties - 1; //leader party
+
+	if (myIdx == 0)
+		runtime.open("./runtime_client.txt", runtime.app | runtime.out);
+
+	if (myIdx == leaderIdx)
+		runtime.open("./runtime_leader.txt", runtime.app | runtime.out);
+
 
 #pragma region setup
 
-
-
-	//nParties = 4;
-	/*std::fstream runtime;
-	if (myIdx == 0)
-	runtime.open("./runtime" + nParties, runtime.trunc | runtime.out);*/
-
-	u64 leaderIdx = nParties - 1; //leader party
+	u64 ttParties= tParties;
+	if (tParties == nParties - 1)//it is sufficient to prevent n-2 ssClientTimecorrupted parties since if n-1 corrupted and only now the part of intersection if all has x, i.e. x is in intersection. 
+		ttParties = tParties - 1;
+	else if (tParties < 1) //make sure to do ss with at least one client
+		ttParties = 1;
+	
 	u64 nSS = nParties - 1; //n-2 parties joinly operated secrete sharing
-	int tSS = tParties; //ss with t next  parties, and last for leader => t+1  
+	int tSS = ttParties; //ss with t next  parties, and last for leader => t+1  
 
 
 	u64 offlineAvgTime(0), hashingAvgTime(0), getOPRFAvgTime(0),
@@ -2160,7 +2167,8 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 	u64 maskSize = roundUpTo(psiSecParam + 2 * std::log(setSize) - 1, 8) / 8;
 	u64 nextNeighbor = (myIdx + 1) % nParties;
 	u64 prevNeighbor = (myIdx - 1 + nParties) % nParties;
-
+	u64 num_intersection;
+	double dataSent, Mbps;
 #pragma endregion
 
 	for (u64 idxTrial = 0; idxTrial < nTrials; idxTrial++)
@@ -2169,8 +2177,8 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 		std::vector<block> set(setSize);
 
 		std::vector<std::vector<block>>
-			sendPayLoads(tParties + 1), //include the last PayLoads to leader
-			recvPayLoads(tParties); //received form clients
+			sendPayLoads(ttParties + 1), //include the last PayLoads to leader
+			recvPayLoads(ttParties); //received form clients
 
 		for (u64 i = 0; i < setSize; ++i)
 		{
@@ -2181,7 +2189,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 
 
 		if (myIdx != leaderIdx) {//generate share of zero for leader myIDx!=n-1		
-			for (u64 idxP = 0; idxP < tParties; ++idxP)
+			for (u64 idxP = 0; idxP < ttParties; ++idxP)
 			{
 				sendPayLoads[idxP].resize(setSize);
 				for (u64 i = 0; i < setSize; ++i)
@@ -2190,14 +2198,14 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 				}
 			}
 
-			sendPayLoads[tParties].resize(setSize); //share to leader at second phase
+			sendPayLoads[ttParties].resize(setSize); //share to leader at second phase
 			for (u64 i = 0; i < setSize; ++i)
 			{
-				sendPayLoads[tParties][i] = ZeroBlock;
-				for (u64 idxP = 0; idxP < tParties; ++idxP)
+				sendPayLoads[ttParties][i] = ZeroBlock;
+				for (u64 idxP = 0; idxP < ttParties; ++idxP)
 				{
-					sendPayLoads[tParties][i] =
-						sendPayLoads[tParties][i] ^ sendPayLoads[idxP][i];
+					sendPayLoads[ttParties][i] =
+						sendPayLoads[ttParties][i] ^ sendPayLoads[idxP][i];
 				}
 			}
 			for (u64 idxP = 0; idxP < recvPayLoads.size(); ++idxP)
@@ -2225,7 +2233,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 			for (u64 i = 0; i < setSize; ++i)
 			{
 				block check = ZeroBlock;
-				for (u64 idxP = 0; idxP < tParties + 1; ++idxP)
+				for (u64 idxP = 0; idxP < ttParties + 1; ++idxP)
 				{
 					//if (idxP != myIdx)
 					check = check ^ sendPayLoads[idxP][i];
@@ -2641,7 +2649,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 				pThrds[pIdx].join();
 		}
 
-		auto getSSDone2Dir = timer.setTimePoint("secretsharingDone");
+		auto getSsClientsDone = timer.setTimePoint("secretsharingClientDone");
 
 
 #ifdef PRINT
@@ -2706,13 +2714,13 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 			for (u64 i = 0; i < setSize; ++i)
 			{
 				//xor all received share
-				for (u64 idxP = 0; idxP < tParties; ++idxP)
+				for (u64 idxP = 0; idxP < ttParties; ++idxP)
 				{
-					sendPayLoads[tParties][i] = sendPayLoads[tParties][i] ^ recvPayLoads[idxP][i];
+					sendPayLoads[ttParties][i] = sendPayLoads[ttParties][i] ^ recvPayLoads[idxP][i];
 				}
 			}
 			//send to leader
-			send[leaderIdx].sendSecretSharing(leaderIdx, bins, sendPayLoads[tParties], chls[leaderIdx]);
+			send[leaderIdx].sendSecretSharing(leaderIdx, bins, sendPayLoads[ttParties], chls[leaderIdx]);
 		}
 		else
 		{
@@ -2729,7 +2737,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 		}
 
 
-		auto getSSDoneRound = timer.setTimePoint("leaderGetXorDone");
+		auto getSSLeaderDone = timer.setTimePoint("leaderGetXorDone");
 
 
 		//##########################
@@ -2755,41 +2763,85 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 					mIntersection.push_back(i);
 				}
 			}
+			
+
 			Log::out << "mIntersection.size(): " << mIntersection.size() << Log::endl;
+			num_intersection = mIntersection.size();
 		}
+		
 		auto getIntersection = timer.setTimePoint("getIntersection");
 
-
-		if (myIdx == 0) {
+		if (myIdx == 0 || myIdx == leaderIdx) {
 			auto offlineTime = std::chrono::duration_cast<std::chrono::milliseconds>(initDone - start).count();
 			auto hashingTime = std::chrono::duration_cast<std::chrono::milliseconds>(hashingDone - initDone).count();
 			auto getOPRFTime = std::chrono::duration_cast<std::chrono::milliseconds>(getOPRFDone - hashingDone).count();
-			auto ss2DirTime = std::chrono::duration_cast<std::chrono::milliseconds>(getSSDone2Dir - getOPRFDone).count();
-			auto ssRoundTime = std::chrono::duration_cast<std::chrono::milliseconds>(getSSDoneRound - getSSDone2Dir).count();
-			auto intersectionTime = std::chrono::duration_cast<std::chrono::milliseconds>(getIntersection - getSSDoneRound).count();
+			auto ssClientTime = std::chrono::duration_cast<std::chrono::milliseconds>(getSsClientsDone - getOPRFDone).count();
+			auto ssServerTime = std::chrono::duration_cast<std::chrono::milliseconds>(getSSLeaderDone - getSsClientsDone).count();
+			auto intersectionTime = std::chrono::duration_cast<std::chrono::milliseconds>(getIntersection - getSSLeaderDone).count();
 
-			double onlineTime = hashingTime + getOPRFTime + ss2DirTime + ssRoundTime + intersectionTime;
+			double onlineTime = hashingTime + getOPRFTime + ssClientTime + ssServerTime + intersectionTime;
 
 			double time = offlineTime + onlineTime;
 			time /= 1000;
+
+
+			dataSent = 0;
+			Mbps = 0;
+			for (u64 i = 0; i < nParties; ++i)
+			{
+				if (i != myIdx) {
+					chls[i].resize(numThreads);
+					for (u64 j = 0; j < numThreads; ++j)
+					{
+						dataSent += chls[i][j]->getTotalDataSent();
+					}
+				}
+			}
+
+			Mbps = dataSent * 8 / time / (1 << 20);
+
+			for (u64 i = 0; i < nParties; ++i)
+			{
+				if (i != myIdx) {
+					chls[i].resize(numThreads);
+					for (u64 j = 0; j < numThreads; ++j)
+					{
+						chls[i][j]->resetStats();
+					}
+				}
+			}
+	
+			if (myIdx == 0)
+			{
+				std::cout << "Client Idx: " << myIdx << "\n";
+			}
+			else
+			{
+				std::cout << "\nLeader Idx: " << myIdx << "\n";
+			}
+
+	
 
 			std::cout << "setSize: " << setSize << "\n"
 				<< "offlineTime:  " << offlineTime << " ms\n"
 				<< "hashingTime:  " << hashingTime << " ms\n"
 				<< "getOPRFTime:  " << getOPRFTime << " ms\n"
-				<< "ss2DirTime:  " << ss2DirTime << " ms\n"
-				<< "ssRoundTime:  " << ssRoundTime << " ms\n"
+				<< "ss2DirTime:  " << ssClientTime << " ms\n"
+				<< "ssRoundTime:  " << ssServerTime << " ms\n"
 				<< "intersection:  " << intersectionTime << " ms\n"
 				<< "onlineTime:  " << onlineTime << " ms\n"
 				<< "Total time: " << time << " s\n"
+				<< "data/second: " << Mbps << " Mbps\n" 
+				<< "Total data: " << (dataSent / std::pow(2.0, 20)) << " MB" 
 				<< "------------------\n";
 
+			
 
 			offlineAvgTime += offlineTime;
 			hashingAvgTime += hashingTime;
 			getOPRFAvgTime += getOPRFTime;
-			ss2DirAvgTime += ss2DirTime;
-			ssRoundAvgTime += ssRoundTime;
+			ss2DirAvgTime += ssClientTime;
+			ssRoundAvgTime += ssServerTime;
 			intersectionAvgTime += intersectionTime;
 			onlineAvgTime += onlineTime;
 
@@ -2797,6 +2849,63 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 
 	}
 
+	std::cout << IoStream::lock;
+	if (myIdx == 0 || myIdx == leaderIdx) {
+		double avgTime = (offlineAvgTime + onlineAvgTime);
+		avgTime /= 1000;
+
+		std::cout << "=========avg==========\n";
+		runtime << "=========avg==========\n";
+		runtime << "numParty: " << nParties
+			<< "  numCorrupted: " << tParties
+			<< "  setSize: " << setSize
+			<< "  nTrials:" << nTrials << "\n";
+
+		if (myIdx == 0)
+		{
+			std::cout << "Client Idx: " << myIdx << "\n";
+			runtime << "Client Idx: " << myIdx << "\n";
+
+		}
+		else
+		{
+			std::cout << "Leader Idx: " << myIdx << "\n";
+			std::cout << "mIntersection.size(): " << num_intersection << "\n";
+
+			runtime << "Leader Idx: " << myIdx << "\n";
+			runtime << "mIntersection.size(): " << num_intersection << "\n";
+		}
+
+
+		std::cout << "numParty: " << nParties
+			<< "  numCorrupted: " << tParties
+			<< "  setSize: " << setSize
+			<< "  nTrials:" << nTrials << "\n"
+			<< "offlineTime:  " << offlineAvgTime / nTrials << " ms\n"
+			<< "hashingTime:  " << hashingAvgTime / nTrials << " ms\n"
+			<< "getOPRFTime:  " << getOPRFAvgTime / nTrials << " ms\n"
+			<< "ssClientTime:  " << ss2DirAvgTime/ nTrials << " ms\n"
+			<< "ssLeaderTime:  " << ssRoundAvgTime/ nTrials << " ms\n"
+			<< "intersection:  " << intersectionAvgTime / nTrials << " ms\n"
+			<< "onlineTime:  " << onlineAvgTime / nTrials << " ms\n"
+			<< "Total time: " << avgTime / nTrials << " s\n"
+			<< "data/second: " << Mbps << " Mbps\n"
+			<< "Total data: " << (dataSent / std::pow(2.0, 20)) << " MB\n";
+
+
+		runtime << "offlineTime:  " << offlineAvgTime / nTrials << " ms\n"
+			<< "hashingTime:  " << hashingAvgTime / nTrials << " ms\n"
+			<< "getOPRFTime:  " << getOPRFAvgTime / nTrials << " ms\n"
+			<< "ssClientTime:  " << ss2DirAvgTime/ nTrials << " ms\n"
+			<< "ssLeaderTime:  " << ssRoundAvgTime/ nTrials << " ms\n"
+			<< "intersection:  " << intersectionAvgTime / nTrials << " ms\n"
+			<< "onlineTime:  " << onlineAvgTime / nTrials << " ms\n"
+			<< "Total time: " << avgTime / nTrials << " s\n"
+			<< "data/second: " << Mbps << " Mbps\n"
+			<< "Total data: " << (dataSent / std::pow(2.0, 20)) << " MB\n";
+		runtime.close();
+	}
+	std::cout << IoStream::unlock;
 
 	/*if (myIdx == 0) {
 	double avgTime = (offlineAvgTime + onlineAvgTime);
@@ -2855,10 +2964,7 @@ void OPPRFnt_EmptrySet_Test_Main()
 	nParties = 5;
 	u64 tParties = 2;
 
-	if (tParties == nParties - 1)//max ss = n-1
-		tParties--;
-	else if (tParties < 1) //make sure to do ss with at least one client
-		tParties = 1;
+	
 	std::vector<std::thread>  pThrds(nParties);
 	for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
 	{

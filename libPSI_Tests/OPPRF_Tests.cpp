@@ -2518,7 +2518,12 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 		auto getIntersection = timer.setTimePoint("getIntersection");
 
 
-		if (myIdx == 0) {
+		
+
+		//auto Mbps = dataSent * 8 / time / (1 << 20);
+
+
+		if (myIdx == 0 || myIdx==leaderIdx) {
 			auto offlineTime = std::chrono::duration_cast<std::chrono::milliseconds>(initDone - start).count();
 			auto hashingTime = std::chrono::duration_cast<std::chrono::milliseconds>(hashingDone - initDone).count();
 			auto getOPRFTime = std::chrono::duration_cast<std::chrono::milliseconds>(getOPRFDone - hashingDone).count();
@@ -2530,6 +2535,33 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 
 			double time = offlineTime + onlineTime;
 			time /= 1000;
+
+			u64 dataSent = 0;
+
+			for (u64 i = 0; i < nParties; ++i)
+			{
+				if (i != myIdx) {
+					chls[i].resize(numThreads);
+					for (u64 j = 0; j < numThreads; ++j)
+					{
+						dataSent += chls[i][j]->getTotalDataSent();
+					}
+				}
+			}
+			auto Mbps = dataSent * 8 / time / (1 << 20);
+
+			std::cout << setSize << "  " << offlineTime << "  " << onlineTime << "        " << Mbps << " Mbps      " << (dataSent / std::pow(2.0, 20)) << " MB" << std::endl;
+
+			for (u64 i = 0; i < nParties; ++i)
+			{
+				if (i != myIdx) {
+					chls[i].resize(numThreads);
+					for (u64 j = 0; j < numThreads; ++j)
+					{
+						chls[i][j]->resetStats();
+					}
+				}
+			}
 
 			std::cout << "setSize: " << setSize << "\n"
 				<< "offlineTime:  " << offlineTime << " ms\n"
@@ -2628,7 +2660,7 @@ void OPPRFnt_EmptrySet_Test_Impl()
 		{
 			pThrds[pIdx] = std::thread([&, pIdx]() {
 				//	Channel_party_test(pIdx);
-				tparty(pIdx, nParties, tParties, mSet.size(), mSet, 1);
+				tparty(pIdx, nParties, tParties, mSet.size(), mSet, 2);
 			});
 		}
 	}
