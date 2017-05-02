@@ -245,7 +245,7 @@ void Bit_Position_Recursive_Test_Impl()
 	//	testSet[i].m128i_u16[2] = 1 << i;
 	//}
 
-	BaseOPPRF b;
+	BitPosition b;
 
 #if 0
 	block test = ZeroBlock;

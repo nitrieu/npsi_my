@@ -182,3 +182,19 @@ onlineTime:  409 ms
 data/second: 0.0750228 Mbps
 Total time: 3.013 s		Total data: 0.0282555 MB
 ------------------
+=========avg==========
+numParty: 5  numCorrupted: 2  setSize: 32  nTrials:1
+Leader Idx: 4
+#Output Intersection: 32
+#Expected Intersection: 16
+offlineTime:  2485 ms
+hashingTime:  7 ms
+getOPRFTime:  5 ms
+ssClientTime:  0 ms
+ssLeaderTime:  320 ms
+intersection:  0 ms
+onlineTime:  332 ms
+Bandwidth: Send: 0.0798527 Mbps,	 Recv: 0.178165 Mbps
+Total time: 2.817 s
+Total Comm: Send:0.0281181 MB	 Recv: 0.0627365 MB
+------------------

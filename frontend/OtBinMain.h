@@ -19,4 +19,5 @@ void party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet);
 void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials);
 void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, std::vector<PRNG>& mSeedPrng,u64 opt, u64 nTrials);
 void OPPRFn_Aug_EmptrySet_Test_Impl();
+void OPPRFnt_EmptrySet_Test_Impl();
 //void OPPRFn_EmptrySet_Test();
