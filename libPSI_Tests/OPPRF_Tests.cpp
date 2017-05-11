@@ -2996,8 +2996,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 
 		if (myIdx == leaderIdx) {
 			std::vector<u64> mIntersection;
-			u64 maskSize = roundUpTo(psiSecParam + 2 * std::log2(setSize) - 1, 8) / 8;
-
+			
 			for (u64 i = 0; i < setSize; ++i)
 			{
 
@@ -3008,7 +3007,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 					sum = sum ^ recvPayLoads[idxP][i];
 				}
 
-				if (!memcmp((u8*)&ZeroBlock, &sum, maskSize))
+				if (!memcmp((u8*)&ZeroBlock, &sum, bins.mMaskSize))
 				{
 					mIntersection.push_back(i);
 				}

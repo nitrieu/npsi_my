@@ -777,9 +777,7 @@ namespace osuCrypto
 
 		//u64 maskSize = sizeof(block);// roundUpTo(mStatSecParam + 2 * std::log(mN) - 1, 8) / 8;
 		//u64 numBitLoc = bins.mSimpleBins.mNumBits[1];
-		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log(mN) - 1 + bins.mSimpleBins.mNumBits[1], 8) / 8;
-		if (bins.mMaskSize > sizeof(block))
-			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");
+		
 
 
 		std::vector<std::thread>  thrds(chls.size());
@@ -803,6 +801,7 @@ namespace osuCrypto
 				for (auto bIdxType = 0; bIdxType < 2; bIdxType++)
 				{
 					auto binCountRecv = bins.mCuckooBins.mBinCount[bIdxType];
+					bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 
 					u64 binStart, binEnd;
 					if (bIdxType == 0)
@@ -1275,14 +1274,7 @@ namespace osuCrypto
 			throw std::runtime_error(LOCATION);
 
 
-		//TODO: double check
-		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log(mN) - 1 + bins.mSimpleBins.mNumBits[1], 8) / 8;
-		//u64 maskSize = 7;
-		if (bins.mMaskSize > sizeof(block))
-			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");
-
-
-
+		
 		std::vector<std::thread>  thrds(chls.size());
 		// std::vector<std::thread>  thrds(1);        
 
@@ -1310,6 +1302,8 @@ namespace osuCrypto
 				//2 type of bins: normal bin in inital step + stash bin
 				for (auto bIdxType = 0; bIdxType < 2; bIdxType++)
 				{
+					bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
+
 					auto binCountSend = bins.mSimpleBins.mBinCount[bIdxType];
 					u64 binStart, binEnd;
 					if (bIdxType == 0)
