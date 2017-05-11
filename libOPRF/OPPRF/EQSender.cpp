@@ -1,4 +1,4 @@
-#include "BarkOPRFSender.h"
+#include "EQSender.h"
 
 #include "Crypto/Commit.h"
 #include "Common/Log.h"
@@ -10,17 +10,17 @@
 namespace osuCrypto
 {
 
-    BarkOPRFSender::BarkOPRFSender()
+    EQSender::EQSender()
     {
     }
-    //const u64 BarkOPRFSender::hasherStepSize(128);
+    //const u64 EQSender::hasherStepSize(128);
 
 
-    BarkOPRFSender::~BarkOPRFSender()
+    EQSender::~EQSender()
     {
     }
 #if 0
-    void BarkOPRFSender::init(u64 n, u64 statSec, u64 inputBitSize,
+    void EQSender::init(u64 n, u64 statSec, u64 inputBitSize,
         Channel & chl0,
         NcoOtExtSender&  ots,
         block seed)
@@ -28,7 +28,7 @@ namespace osuCrypto
         init(n, statSec, inputBitSize, { &chl0 }, ots, seed);
     }
 
-    void BarkOPRFSender::init(u64 n, u64 statSec, u64 inputBitSize,
+    void EQSender::init(u64 n, u64 statSec, u64 inputBitSize,
         const std::vector<Channel*>& chls,
         NcoOtExtSender& otSend,
         block seed)
@@ -151,12 +151,12 @@ namespace osuCrypto
     }
 
 
-    void BarkOPRFSender::sendInput(std::vector<block>& inputs, Channel & chl)
+    void EQSender::sendInput(std::vector<block>& inputs, Channel & chl)
     {
         sendInput(inputs, { &chl });
     }
 
-    void BarkOPRFSender::sendInput(std::vector<block>& inputs, const std::vector<Channel*>& chls)
+    void EQSender::sendInput(std::vector<block>& inputs, const std::vector<Channel*>& chls)
     {
 
         if (inputs.size() != mN)

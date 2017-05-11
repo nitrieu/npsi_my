@@ -2,8 +2,8 @@
 
 #include "OPPRF/OPPRFReceiver.h"
 #include "OPPRF/OPPRFSender.h"
-#include "OPPRF/BarkOPRFReceiver.h"
-#include "OPPRF/BarkOPRFSender.h"
+#include "OPPRF/EQReceiver.h"
+#include "OPPRF/EQSender.h"
 
 #include <fstream>
 using namespace osuCrypto;
@@ -942,10 +942,10 @@ void party3(u64 myIdx, u64 setSize, u64 nTrials)
 
 		if (myIdx == 0) {
 
-			u64 maskSize = roundUpTo(psiSecParam + 2 * std::log2(setSize) - 1, 8) / 8;
+			
 			for (u64 i = 0; i < setSize; ++i)
 			{
-				if (!memcmp((u8*)&sendPayLoads[i], &recvPayLoads[i], maskSize))
+				if (!memcmp((u8*)&sendPayLoads[i], &recvPayLoads[i], bins.mMaskSize))
 				{
 					mIntersection.push_back(i);
 				}
@@ -1043,7 +1043,7 @@ void party3(u64 myIdx, u64 setSize, u64 nTrials)
 			<< "intersection:  " << intersectionAvgTime / nTrials << " ms\n"
 			<< "onlineTime:  " << onlineAvgTime / nTrials << " ms\n"
 			<< "Bandwidth: Send: " << Mbps << " Mbps,\t Recv: " << MbpsRecv << " Mbps\n"
-			<< "Total time: " << time << " s\n"
+			<< "Total time: " << avgTime/ nTrials << " s\n"
 			<< "Total Comm: Send:" << (dataSent / std::pow(2.0, 20)) << " MB"
 			<< "\t Recv: " << (dateRecv / std::pow(2.0, 20)) << " MB\n"
 			<< "------------------\n";
@@ -1058,7 +1058,7 @@ void party3(u64 myIdx, u64 setSize, u64 nTrials)
 			<< "intersection:  " << intersectionAvgTime / nTrials << " ms\n"
 			<< "onlineTime:  " << onlineAvgTime / nTrials << " ms\n"
 			<< "Bandwidth: Send: " << Mbps << " Mbps,\t Recv: " << MbpsRecv << " Mbps\n"
-			<< "Total time: " << time << " s\n"
+			<< "Total time: " << avgTime / nTrials << " s\n"
 			<< "Total Comm: Send:" << (dataSent / std::pow(2.0, 20)) << " MB"
 			<< "\t Recv: " << (dateRecv / std::pow(2.0, 20)) << " MB\n"
 			<< "------------------\n";

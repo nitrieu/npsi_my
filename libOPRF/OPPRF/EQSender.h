@@ -8,7 +8,7 @@ namespace osuCrypto
 {
 
 
-    class BarkOPRFSender
+    class EQSender
     {
     public:
 
@@ -16,8 +16,8 @@ namespace osuCrypto
         //static const u64 CodeWordSize = 7;
         //static const u64 hasherStepSize;
 
-        BarkOPRFSender();
-        ~BarkOPRFSender();
+        EQSender();
+        ~EQSender();
 
         u64 mN, mStatSecParam, mNcoInputBlkSize,  mOtMsgBlkSize;
         block mHashingSeed;

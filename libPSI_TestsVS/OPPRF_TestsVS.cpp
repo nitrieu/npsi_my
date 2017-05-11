@@ -1,6 +1,7 @@
 #include "stdafx.h"
 //#include "CppUnitTest.h"
 #include "OPPRF_Tests.h"
+#include "EQ_Tests.h"
 //#include "nPSI.h"
 #include "Common.h"
 #include "ShamirSSScheme_Tests.h"
@@ -29,6 +30,13 @@ namespace WeGarbleTests
 			InitDebugPrinting();
 			nOPPRF_EmptrySet_Test_Impl();
 		}*/
+
+			TEST_METHOD(EQ_EmptrySet_Test)
+		{
+			InitDebugPrinting();
+			EQ_EmptrySet_Test_Impl();
+
+		}
 
 		TEST_METHOD(OPPRFn_EmptrySet_Test)
 		{

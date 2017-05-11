@@ -407,8 +407,6 @@ void Bit_Position_Random_Test_Impl()
 
 }
 
-
-
 void OPPRF_CuckooHasher_Test_Impl()
 {
 #if 0
@@ -464,7 +462,6 @@ void OPPRF_CuckooHasher_Test_Impl()
 	}
 #endif
 }
-
 
 void Channel_Test_Impl() {
 	std::string name("psi");

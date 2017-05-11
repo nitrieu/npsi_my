@@ -84,13 +84,13 @@
     <ClCompile Include="Hashing\BitPosition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OPPRF\BarkOPRFReceiver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OPPRF\BarkOPRFSender.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OPPRF\binSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OPPRF\EQReceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OPPRF\EQSender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,13 +110,13 @@
     <ClInclude Include="Hashing\BitPosition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OPPRF\BarkOPRFReceiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OPPRF\BarkOPRFSender.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OPPRF\binSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OPPRF\EQReceiver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OPPRF\EQSender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

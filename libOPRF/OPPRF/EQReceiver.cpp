@@ -1,4 +1,4 @@
-#include "BarkOPRFReceiver.h"
+#include "EQReceiver.h"
 #include <future>
 
 #include "Crypto/PRNG.h"
@@ -15,177 +15,217 @@
 
 namespace osuCrypto
 {
-    BarkOPRFReceiver::BarkOPRFReceiver()
+    EQReceiver::EQReceiver()
     {
     }
 
-    BarkOPRFReceiver::~BarkOPRFReceiver()
+    EQReceiver::~EQReceiver()
     {
     }
+
 #if 0
-    void BarkOPRFReceiver::init(
-        u64 n,
-        u64 statSecParam,
-        u64 inputBitSize,
-        Channel & chl0,
-        NcoOtExtReceiver& ots,
-        block seed)
-    {
-        init(n, statSecParam, inputBitSize, { &chl0 }, ots, seed);
-    }
-
-    void BarkOPRFReceiver::init(
-        u64 n,
-        u64 statSecParam,
-        u64 inputBitSize,
-        const std::vector<Channel*>& chls,
-        NcoOtExtReceiver& otRecv,
-        block seed)
-    {
-
-        // this is the offline function for doing binning and then performing the OtPsi* between the bins.
+	void EQReceiver::init(
+		u64 n,
+		u64 statSec,
+		u64 inputBitSize,
+		Channel & chl0, u64 otCounts,
+		NcoOtExtReceiver& otRecv,
+		block seed)
+	{
+		init(n, statSec, inputBitSize, { &chl0 }, otCounts, otRecv,  seed);
+	}
 
 
-        mStatSecParam = statSecParam;
-        mN = n;
+	void EQReceiver::init(
+		u64 n,
+		u64 statSecParam,
+		u64 inputBitSize,
+		const std::vector<Channel*>& chls, u64 otCounts,
+		NcoOtExtReceiver& otRecv,
+		block seed)
+	{
+				
+		mStatSecParam = statSecParam;
+		mN = n;
 
-        // must be a multiple of 128...
-        u64 baseOtCount;// = 128 * CodeWordSize;
-        u64 compSecParam = 128;
+		// must be a multiple of 128...
+		u64 baseOtCount;// = 128 * CodeWordSize;
+		u64 compSecParam = 128;
 
 		otRecv.getParams(
-            false,
-            compSecParam, statSecParam, inputBitSize, mN, //  input
-            mNcoInputBlkSize, baseOtCount); // output
+			false,
+			compSecParam, statSecParam, inputBitSize, mN, //  input
+			mNcoInputBlkSize, baseOtCount); // output
 
-        //mOtMsgBlkSize = (baseOtCount + 127) / 128;
+											//mOtMsgBlkSize = (baseOtCount + 127) / 128;
+	
 
+		gTimer.setTimePoint("Init.recv.start");
+		mPrng.SetSeed(seed);
+		auto& prng = mPrng;
 
-        gTimer.setTimePoint("Init.recv.start");
-        mPrng.SetSeed(seed);
-        auto& prng = mPrng;
+		auto myHashSeed = prng.get<block>();
 
-        auto myHashSeed = prng.get<block>();
-
-        auto& chl0 = *chls[0];
-
-        // we need a random hash function, so we will both commit to a seed and then later decommit. 
-        //This is the commitments phase
-        Commit comm(myHashSeed), theirComm;
-        chl0.asyncSend(comm.data(), comm.size());
-        chl0.recv(theirComm.data(), theirComm.size());
-
-        // ok, now decommit to the seed.
-        chl0.asyncSend(&myHashSeed, sizeof(block));
-        block theirHashingSeed;
-        chl0.recv(&theirHashingSeed, sizeof(block));
-
-        gTimer.setTimePoint("Init.recv.hashSeed");
-
-        // compute the hashing seed as the xor of both of ours seeds.
-        mHashingSeed = myHashSeed ^ theirHashingSeed;
+		auto& chl0 = *chls[0];
+			
 
 
-        // this SimpleHasher1 class knows how to hash things into bins. But first we need 
-        // to compute how many bins we need, the max size of bins, etc.
-        mBins.init(2,n, mHashingSeed, statSecParam, false);
-		//mTheirBins.init(n, inputBitSize, mHashingSeed, statSecParam);
-
-        // figure out how many OTs we need in total.
-        u64 perBinOtCount = 1;
-		u64 otCount = perBinOtCount * (mBins.mBinCount); //NOTE: assume we dont have stash size +mBins.mParams.mStashSize);
+		// how many OTs we need in total.
+		u64 otCountRecv = otCounts; //mCuckooBins.mBins.size();
 
 
-        gTimer.setTimePoint("Init.recv.baseStart");
-        // since we are doing mmlicious PSI, we need OTs going in both directions. 
-        // This will hold the send OTs
+		gTimer.setTimePoint("Init.recv.baseStart");
+		// since we are doing mmlicious PSI, we need OTs going in both directions. 
+		// This will hold the send OTs
 
-        if (otRecv.hasBaseOts() == false)
-        {
-            // first do 128 public key OTs (expensive)
-            std::array<block, gOtExtBaseOtCount> IknpSendBase;
-            BitVector choices(gOtExtBaseOtCount); choices.randomize(prng);
-            NaorPinkas base;
-            base.receive(choices, IknpSendBase, prng, chl0, 2);
-
-
-            IknpOtExtSender IknpSend;
-            IknpSend.setBaseOts(IknpSendBase, choices);
-            std::vector<std::array<block, 2>> sendBaseMsg(baseOtCount);
-            IknpSend.send(sendBaseMsg, prng, chl0);
+		if (otRecv.hasBaseOts() == false ||
+			(otSend.hasBaseOts() == false && isOtherDirection))
+		{
+			// first do 128 public key OTs (expensive)
+			std::array<block, gOtExtBaseOtCount> kosSendBase;
+			BitVector choices(gOtExtBaseOtCount); choices.randomize(prng);
+			NaorPinkas base;
+			base.receive(choices, kosSendBase, prng, chl0, 2);
 
 
-            // Divide these OT mssages between the Kco and Kos protocols
-            ArrayView<std::array<block, 2>> kcoRecvBase(
-                sendBaseMsg.begin(),
-                sendBaseMsg.begin() + baseOtCount);
+			// now extend these to enough recv OTs to seed the send Kco and the send Kos ot extension
+			u64 dualBaseOtCount = gOtExtBaseOtCount;
+			if (!isOtherDirection) //if it is not dual, number extend OT is 128
+				dualBaseOtCount = 0;
 
-            // now set these ~800 OTs as the base of our N choose 1 OTs.
-            otRecv.setBaseOts(kcoRecvBase);
-        }
-        
-
-        gTimer.setTimePoint("Init.recv.ExtStart");
+			IknpOtExtSender iknpSend;
+			iknpSend.setBaseOts(kosSendBase, choices);
+			std::vector<std::array<block, 2>> sendBaseMsg(baseOtCount + dualBaseOtCount);
+			iknpSend.send(sendBaseMsg, prng, chl0);
 
 
+			// Divide these OT mssages between the Kco and Kos protocols
+			ArrayView<std::array<block, 2>> kcoRecvBase(
+				sendBaseMsg.begin(),
+				sendBaseMsg.begin() + baseOtCount);
+			// now set these ~800 OTs as the base of our N choose 1 OTs.
+			otRecv.setBaseOts(kcoRecvBase);
 
-        auto recvOtRoutine = [&](u64 tIdx, u64 total, NcoOtExtReceiver& ots, Channel& chl)
-        {
-            auto start = (tIdx     * mBins.mBinCount / total) ;
-            auto end = ((tIdx + 1) * mBins.mBinCount / total) ;
+			if (isOtherDirection) {
+				ArrayView<std::array<block, 2>> kosRecvBase(
+					sendBaseMsg.begin() + baseOtCount,
+					sendBaseMsg.end());
 
-            ots.init(end - start);
-        };
+				BitVector recvChoice(baseOtCount); recvChoice.randomize(prng);
+				std::vector<block> kcoSendBase(baseOtCount);
+				IknpOtExtReceiver iknp;
+				iknp.setBaseOts(kosRecvBase);
+				iknp.receive(recvChoice, kcoSendBase, prng, chl0);
+				// now set these ~800 OTs as the base of our N choose 1 OTs.
+				otSend.setBaseOts(kcoSendBase, recvChoice);
+			}
 
-
-        // compute how amny threads we want to do for each direction.
-        // the current thread will do one of the OT receives so -1 for that.
-        u64 numThreads = chls.size()-1;
-        
-        // where we will store the threads that are doing the extension
-        std::vector<std::thread> thrds(numThreads);
-
-        // some iters to help giving out resources.
-        auto thrdIter = thrds.begin();
-        auto chlIter = chls.begin() + 1;
-
-        mOtRecvs.resize(chls.size());
-
-        // now make the threads that will to the extension
-        for (u64 i = 0; i < numThreads; ++i)
-        {
-            mOtRecvs[i+1] = std::move(otRecv.split());
-
-            // spawn the thread and call the routine.
-            *thrdIter++ = std::thread([&, i, chlIter]()
-            {
-                recvOtRoutine(i+1, numThreads+1,*mOtRecvs[i+1],**chlIter);
-            });
-
-            ++chlIter;
-        }
-
-   
-        mOtRecvs[0] = std::move(otRecv.split());
-
-        // now use this thread to do a recv routine.
-        recvOtRoutine(0, numThreads + 1, *mOtRecvs[0],  chl0);
-
-        // join any threads that we created.
-        for (auto& thrd : thrds)
-            thrd.join();
-
-        gTimer.setTimePoint("Init.recv.done");
-
-    }
+		}
 
 
-    void BarkOPRFReceiver::sendInput(std::vector<block>& inputs, Channel & chl)
+		gTimer.setTimePoint("Init.recv.ExtStart");
+
+
+
+
+		auto sendOtRoutine = [&](u64 tIdx, u64 total, NcoOtExtSender& ots, Channel& chl)
+		{
+			auto start = (tIdx     *otCountSend / total);
+			auto end = ((tIdx + 1) * otCountSend / total);
+
+			ots.init(end - start);
+		};
+
+		auto recvOtRoutine = [&](u64 tIdx, u64 total, NcoOtExtReceiver& ots, Channel& chl)
+		{
+			auto start = (tIdx     * otCountRecv / total);
+			auto end = ((tIdx + 1) * otCountRecv / total);
+
+			ots.init(end - start);
+		};
+
+
+		// compute how amny threads we want to do for each direction.
+		// the current thread will do one of the OT receives so -1 for that.
+		u64 numThreads = chls.size() - 1;
+		u64 numRecvThreads, numSendThreads;
+
+		if (isOtherDirection) {
+			numRecvThreads = numThreads / 2;
+			numSendThreads = numThreads - numRecvThreads;
+		}
+		else {
+			numRecvThreads = numThreads;
+			numSendThreads = 0;
+		}
+		// where we will store the threads that are doing the extension
+		std::vector<std::thread> thrds(numThreads);
+
+		// some iters to help giving out resources.
+		auto thrdIter = thrds.begin();
+		auto chlIter = chls.begin() + 1;
+
+		mOtRecvs.resize(chls.size());
+
+		// now make the threads that will to the extension
+		for (u64 i = 0; i < numRecvThreads; ++i)
+		{
+			mOtRecvs[i + 1] = std::move(otRecv.split());
+
+			// spawn the thread and call the routine.
+			*thrdIter++ = std::thread([&, i, chlIter]()
+			{
+				recvOtRoutine(i + 1, numRecvThreads + 1, *mOtRecvs[i + 1], **chlIter);
+			});
+
+			++chlIter;
+		}
+		mOtRecvs[0] = std::move(otRecv.split());
+		// now use this thread to do a recv routine.
+		recvOtRoutine(0, numRecvThreads + 1, *mOtRecvs[0], chl0);
+
+
+
+		mOtSends.resize(chls.size());
+		// do the same thing but for the send OT extensions
+		for (u64 i = 0; i < numSendThreads; ++i)
+		{
+
+			mOtSends[i] = std::move(otSend.split());
+
+			*thrdIter++ = std::thread([&, i, chlIter]()
+			{
+				sendOtRoutine(i, numSendThreads, *mOtSends[i], **chlIter);
+			});
+
+			++chlIter;
+		}
+
+		// if the caller doesnt want to do things in parallel
+		// the we will need to do the send OT Ext now...
+		if (numSendThreads == 0 && isOtherDirection)
+		{
+			mOtSends[0] = std::move(otSend.split());
+			sendOtRoutine(0, 1, *mOtSends[0], chl0);
+		}
+
+		// join any threads that we created.
+		for (auto& thrd : thrds)
+			thrd.join();
+
+		gTimer.setTimePoint("Init.recv.done");
+
+	}
+
+
+
+
+    void EQReceiver::sendInput(std::vector<block>& inputs, Channel & chl)
     {
         sendInput(inputs, { &chl });
     }
 
-    void BarkOPRFReceiver::sendInput(std::vector<block>& inputs, const std::vector<Channel*>& chls)
+    void EQReceiver::sendInput(std::vector<block>& inputs, const std::vector<Channel*>& chls)
     {
 #if 1
         // this is the online phase.
