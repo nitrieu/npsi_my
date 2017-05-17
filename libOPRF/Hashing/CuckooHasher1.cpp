@@ -168,7 +168,10 @@ namespace osuCrypto
 				throw std::runtime_error("not implemented");
 		
 			if (opt == 0)
+			{
 				mParams.mSenderBinSize[0] = 32;
+				mParams.mSenderBinSize[1] = 64;
+			}
 
         mHashes.resize(n * mParams.mNumHashes[0], u64(-1));
         mHashesView = MatrixView<u64>(mHashes.begin(), mHashes.end(), mParams.mNumHashes[0]);

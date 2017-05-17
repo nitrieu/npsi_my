@@ -188,8 +188,10 @@ namespace osuCrypto
 			throw std::runtime_error("not implemented");
 
 		if (opt == 0)
+		{
 			mParams.mMaxBinSize[0] = 32;
-		
+			mParams.mMaxBinSize[1] = 64;
+		}
 
 
 		mMaxBinSize[0] = mParams.mMaxBinSize[0];

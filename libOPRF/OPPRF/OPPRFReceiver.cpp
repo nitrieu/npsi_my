@@ -801,7 +801,7 @@ namespace osuCrypto
 				for (auto bIdxType = 0; bIdxType < 2; bIdxType++)
 				{
 					auto binCountRecv = bins.mCuckooBins.mBinCount[bIdxType];
-					bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
+					//bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 
 					u64 binStart, binEnd;
 					if (bIdxType == 0)
@@ -930,7 +930,7 @@ namespace osuCrypto
 
 				for (auto bIdxType = 0; bIdxType < 2; bIdxType++)
 				{
-					bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
+					//bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 					BaseOPPRF poly;
 					poly.poly_init(bins.mMaskSize);
 
@@ -1030,7 +1030,7 @@ namespace osuCrypto
 
 		u32 numHashes = bins.mSimpleBins.mNumHashes[0] + bins.mSimpleBins.mNumHashes[1];
 
-		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
+		//bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
 
 		if (bins.mMaskSize > sizeof(block))
 			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");
@@ -1156,7 +1156,7 @@ namespace osuCrypto
 
 		mBfSize = mNumBFhashs * mN * std::log2(std::exp(1.0));
 
-		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
+		//bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
 
 
 		//u64 mMaskSize = sizeof(block);
@@ -1302,7 +1302,7 @@ namespace osuCrypto
 				//2 type of bins: normal bin in inital step + stash bin
 				for (auto bIdxType = 0; bIdxType < 2; bIdxType++)
 				{
-					bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
+					//bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 
 					auto binCountSend = bins.mSimpleBins.mBinCount[bIdxType];
 					u64 binStart, binEnd;
@@ -1521,7 +1521,7 @@ namespace osuCrypto
 				{
 
 					BaseOPPRF mPoly;
-					bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
+					//bins.mMaskSize = roundUpTo(mStatSecParam + std::log2(bins.mSimpleBins.mMaxBinSize[bIdxType]), 8) / 8;
 					mPoly.poly_init(bins.mMaskSize);
 
 					auto binCountSend = bins.mSimpleBins.mBinCount[bIdxType];
@@ -1636,7 +1636,7 @@ namespace osuCrypto
 		if (plaintexts.size() != mN)
 			throw std::runtime_error(LOCATION);
 
-		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
+		//bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
 
 		if (bins.mMaskSize > sizeof(block))
 			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");
@@ -1812,7 +1812,7 @@ namespace osuCrypto
 		mBfSize = mNumBFhashs * mN * std::log2(std::exp(1.0));
 
 
-		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
+		//bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
 
 		if (bins.mMaskSize > sizeof(block))
 			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");

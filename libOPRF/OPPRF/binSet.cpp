@@ -30,7 +30,7 @@ namespace osuCrypto
 		mN = setSize;
 		mStatSecParam = statSecParam;
 		mOpt = opt;
-
+		mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
 		//Hard-coding key for hash functions 
 		mHashingSeed = _mm_set_epi64x(1, 1);
 
