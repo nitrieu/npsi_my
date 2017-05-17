@@ -30,7 +30,7 @@ std::vector<block> sendSet;
 std::vector<block> mSet;
 u64 nParties(3);
 
-u64 opt = 0;
+u64 opt = 2;
 bool isNTLThreadSafe = false;
 
 void Channel_test()
@@ -1755,8 +1755,8 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
 		//##########################
 		//### Hashing
 		//##########################
-		bins.hashing2Bins(set, 1);
 
+		bins.hashing2Bins(set, 1);
 		/*if(myIdx==0)
 		bins.mSimpleBins.print(myIdx, true, false, false, false);
 		if (myIdx == 1)
@@ -2034,6 +2034,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
 
 		auto getSSLeaderDone = timer.setTimePoint("leaderGetXorDone");
 
+			
 
 		//##########################
 		//### online phasing - compute intersection
@@ -2264,7 +2265,29 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
 }
 
 
+void BinSize(u64 setSize, std::vector<block> set,u64 psiSecParam)
+{
+	//std::cout << "maxRealBinSize: " << bins.mSimpleBins.maxRealBinSize() << std::endl;
 
+	binSet bins;
+	bins.init(0, 3, setSize, psiSecParam, 0);
+
+	bins.hashing2Bins(set, 1);
+	bins.mSimpleBins.maxRealBinSize();
+	
+	std::cout << "=============1st kind of bin=========" << std::endl;
+	for (u64 i = 0; i < bins.mSimpleBins.realBinSizeCount1.size(); i++)
+	{
+		std::cout << i << ": " << bins.mSimpleBins.realBinSizeCount1[i] << std::endl;
+	}
+
+	std::cout << "=============second kind of bin=========" << std::endl;
+	for (u64 i = 0; i < bins.mSimpleBins.realBinSizeCount2.size(); i++)
+	{
+		std::cout << i << ": " << bins.mSimpleBins.realBinSizeCount2[i] << std::endl;
+	}
+
+}
 
 void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, std::vector<PRNG>& mSeedPrng, u64 opt, u64 nTrials)
 {

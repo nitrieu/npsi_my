@@ -167,9 +167,9 @@ void findMaxBinSize_Test_Impl()
 {
 	//u64 n = 1 << 12;
 
-	std::vector<u64> n = { 12,16,20,24 };
-	std::vector<double> scale30 = { 1.14 ,1.12,1.12,1.11 };
-	std::vector<double> scale40 = {1.17 ,1.13,1.12,1.11 };
+	std::vector<u64> n = { 12,14,16,20,24 };
+	std::vector<double> scale30 = { 1.14 ,1.12,1.12,1.12,1.11 };
+	std::vector<double> scale40 = {1.17 ,1.14,1.13,1.12,1.11 };
 
 	
 

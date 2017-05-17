@@ -36,6 +36,7 @@ namespace osuCrypto
 		SimpleHasher1();
 		~SimpleHasher1();
 
+		
 		//typedef std::vector<u64,block> MtBin;
 		//typedef std::vector<std::pair<u64, block>> MtBin;
 		struct Bin
@@ -52,11 +53,17 @@ namespace osuCrypto
 
 		//mOpprfs[IdxParty][inputIdx][hIdx]
 		std::vector<std::vector<std::vector<block>>> mOprfs;
+		u64 testMaxBinSize;
+		std::vector<u64> realBinSizeCount1;
+		std::vector<u64> realBinSizeCount2;
+
 		std::unique_ptr<std::mutex[]> mMtx;
 		std::vector<Bin> mBins;
 		block mHashSeed;
 		SimpleParam1 mParams;
 		void print(u64 idxParty, bool isIdx, bool isOPRF, bool isMap, bool isPos, u64 opt = 0) const;
+
+		u64 maxRealBinSize();
 
 		void init(u64 n, u64 opt);
 
