@@ -27,7 +27,7 @@ namespace osuCrypto
         ~binSet();
 		
 
-        u64 mN, mParties, mMyIdx, mStatSecParam, mNcoInputBlkSize;// , mOtMsgBlkSize;
+        u64 mN,mTheirN, mParties, mMyIdx, mStatSecParam, mNcoInputBlkSize;// , mOtMsgBlkSize;
         block mHashingSeed;
 		u64 mMaskSize;
 		u64 mOpt;
@@ -42,7 +42,7 @@ namespace osuCrypto
 		SimpleHasher1 mSimpleBins;
       
 
-		void init(u64 myIdx, u64 nParties, u64 setSize, u64 statSecParam, u64 opt);
+		void init(u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 statSecParam, u64 opt);
 
 		void hashing2Bins(std::vector<block>& inputs, int numThreads);
     };

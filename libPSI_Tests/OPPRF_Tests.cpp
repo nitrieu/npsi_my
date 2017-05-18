@@ -32,6 +32,7 @@
 #include "NTL/GF2EX.h" 
 #include "NTL/GF2XFactoring.h"
 #include "Common/Log.h"
+#include "Tools/Tools.h"
 
 using namespace osuCrypto;
 #define PRINT
@@ -187,7 +188,7 @@ void findMaxBinSize_Test_Impl()
 	{
 		u64 p = 1 << n[i];
 		u64 numBins = scale40[i] * p;
-		u64 maxBin = findMaxBinSize(p, numBins,3);
+		u64 maxBin = getMaxBinSize(p*3, numBins);
 		std::cout << n[i] << " | " << maxBin << std::endl;
 	}
 	
@@ -212,7 +213,7 @@ void hashing2Bins_Test_Impl()
 		pThrds[pIdx] = std::thread([&, pIdx]() {
 
 
-			bins[pIdx].init(pIdx, 2, setSize, psiSecParam,opt);
+			bins[pIdx].init(pIdx, 2, setSize, setSize, psiSecParam,opt);
 			bins[pIdx].hashing2Bins(set, 2); });
 	}
 
@@ -313,7 +314,7 @@ void Bit_Position_Random_Test_Impl()
 
 
 	SimpleHasher1 mSimpleBins;
-	mSimpleBins.init(setSize,0);
+	mSimpleBins.init(setSize, setSize,0);
 	std::vector<u64> tempIdxBuff(setSize);
 	MatrixView<u64> hashes(setSize, mSimpleBins.mNumHashes[0]);
 
@@ -1201,7 +1202,7 @@ void party(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	//##########################
 	Timer timer;
 	auto start = timer.setTimePoint("start");
-	bins.init(myIdx, nParties, setSize, psiSecParam,opt);
+	bins.init(myIdx, nParties, setSize, setSize, psiSecParam,opt);
 	u64 otCountSend = bins.mSimpleBins.mBins.size();
 	u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -1606,7 +1607,7 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	//### Offline Phasing
 	//##########################
 
-	bins.init(myIdx, nParties, setSize, psiSecParam,opt);
+	bins.init(myIdx, nParties, setSize, setSize, psiSecParam,opt);
 	u64 otCountSend = bins.mSimpleBins.mBins.size();
 	u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -1759,7 +1760,7 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 }
 
 
-void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, std::vector<PRNG>& mSeedPrng)
+void aug_party(u64 myIdx, u64 nParties, u64 setSize, u64 theirSetSize, std::vector<block>& mSet, std::vector<PRNG>& mSeedPrng)
 {
 	//opt = 1;
 	u64 pIdxTest = 1;
@@ -1852,7 +1853,7 @@ void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, s
 	//### Offline Phasing
 	//##########################
 
-	bins.init(myIdx, nParties, setSize, psiSecParam,opt);
+	bins.init(myIdx, nParties, setSize, theirSetSize, psiSecParam,opt);
 	
 
 	u64 otCountSend = bins.mSimpleBins.mBins.size();
@@ -1910,9 +1911,15 @@ void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, s
 	//##########################
 	//### Hashing
 	//##########################
+
+	Log::out <<  "---Hashing---" << Log::endl;
 	bins.hashing2Bins(set, 1);
-	//bins.mSimpleBins.print(myIdx, true, false, false, false);
-	//bins.mCuckooBins.print(myIdx, true, false, false);
+	Log::out << "---end Hashing---" << Log::endl;
+
+	if (myIdx != 0)
+	bins.mSimpleBins.print(myIdx, true, false, false, false);
+	if(myIdx==0)
+	bins.mCuckooBins.print(myIdx, true, false, false);
 
 	//##########################
 	//### Online Phasing - compute OPRF
@@ -2145,7 +2152,7 @@ void party3(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	//### Offline Phasing
 	//##########################
 
-	bins.init(myIdx, nParties, setSize, psiSecParam,opt);
+	bins.init(myIdx, nParties, setSize, setSize, psiSecParam,opt);
 	u64 otCountSend = bins.mSimpleBins.mBins.size();
 	u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -2538,7 +2545,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<bloc
 		//##########################
 		Timer timer;
 		auto start = timer.setTimePoint("start");
-		bins.init(myIdx, nParties, setSize, psiSecParam,opt);
+		bins.init(myIdx, nParties, setSize, setSize, psiSecParam,opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -3179,7 +3186,7 @@ void OPPRFn_Aug_EmptrySet_Test_Impl()
 		mSet[i] = prng.get<block>();
 	}
 	
-	nParties = 3;
+	nParties = 5;
 
 	std::vector<std::vector<block>> mSeeds(nParties);
 	std::vector<std::vector<PRNG>> mPRNGSeeds(nParties);
@@ -3234,7 +3241,11 @@ void OPPRFn_Aug_EmptrySet_Test_Impl()
 	{
 		pThrds[pIdx] = std::thread([&, pIdx]() {
 				//	Channel_party_test(pIdx);
-			aug_party(pIdx, nParties, mSet.size(), mSet, mPRNGSeeds[pIdx]);
+			if(pIdx==0)
+				aug_party(pIdx, nParties, mSet.size()/2, mSet.size(), mSet, mPRNGSeeds[pIdx]);
+			else 
+				aug_party(pIdx, nParties, mSet.size(), mSet.size()/2, mSet, mPRNGSeeds[pIdx]);
+
 			});
 	}
 	for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
@@ -3852,5 +3863,79 @@ void GBF_Test_Impl()
 		if (eq(garbledBF[i], ZeroBlock))
 			garbledBF[i] = prng.get<block>();
 	}*/
+
+}
+
+void Communication_Test_Impl()
+{
+	std::vector<u64> n = { 12,14,16,20,24 };
+	//std::vector<double> scale30 = { 1.14 ,1.12,1.12,1.12,1.11 };
+	std::vector<double> scale1 = { 1.17 ,1.14,1.13,1.12,1.11 };
+	std::vector<double> scale2 = { 0.15 ,0.16,0.16,0.17,0.17 };
+	std::vector<double> maxbinsize1 = { 27,28,29,30,31};
+	std::vector<double> k = { 432 ,440,440,448,448 };
+	std::vector<double> t(3);
+	std::vector<double> parties = {3,4,5,10,15};
+	
+
+	u64 mStatSecParam = 40;
+	u64 numhash = 5;
+
+	for (u64 i = 0; i < n.size(); i++)
+	{
+		u64 mN = 1 << n[i];
+		u64 numBins1 = scale1[i] * mN;
+		u64 numBins2 = scale2[i] * mN;
+		u64 maskbarkoprf = (k[i] / 8) * (numBins1 + numBins2);
+		u64 masksize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
+
+		u64 masktable;
+
+		std::cout << "\n=======n=2^" << n[i] << "=========" << std::endl;
+
+		for (u64 j = 0; j < 4; j++)
+		{
+			if (j == 0)
+				masktable = numBins1 * 32 * masksize + numBins2 * 64 * masksize;
+			if (j == 1)
+				masktable = numBins1 * maxbinsize1[i] * masksize + numBins2 * 63 * masksize;
+
+			if (j == 2)
+				masktable = numhash * masksize *mN;
+
+			if (j == 3)
+				masktable = mN*mStatSecParam*std::log2(std::exp(1.0))*numhash*masksize;
+
+
+		/*	std::cout << "opt: " << j << " | "
+				<< (masktable + maskbarkoprf) * std::pow(10, -6) << std::endl;*/
+
+		
+	}
+	
+		
+			masktable = numBins1 * 32 * masksize + numBins2 * 64 * masksize;
+			
+
+			//std::cout << "opt: " << j << " | "
+			//	<< (masktable + maskbarkoprf) * std::pow(10, -6) << std::endl;
+
+			if(n[i]!=14)
+				for (u64 pIdx = 0; pIdx < parties.size(); pIdx++)
+				{
+					t[0] = 1;
+					t[1] = std::floor(parties[pIdx] / 2);
+					t[2] = parties[pIdx] - 1;
+
+					for (u64 tIdx = 0; tIdx < t.size(); tIdx++)
+					{
+						std::cout << "nParties: " << parties[pIdx] << ", t:"<< t[tIdx]<< " | "
+							<< std::min(t[tIdx]+1, parties[pIdx]-1)*(masktable + maskbarkoprf) * std::pow(10, -6) << std::endl;
+					}
+					std::cout << "=================" << std::endl;
+				}
+		
+		
+	}
 
 }

@@ -166,46 +166,88 @@ namespace osuCrypto
 		return std::log(bins * std::pow(balls * exp(1) / (bins * k), k)) / std::log(2);
 	}
 
-	void SimpleHasher1::init(u64 n,u64 opt)
+	void SimpleHasher1::init(u64 n, u64 theirN,u64 opt)
 	{	
 		mN = n;
 
-		if (n <= 1 << 7)
+		if (theirN <= 1 << 7)
 			mParams = k2n07s40SimpleParam1;
-		else if (n <= 1 << 8)
+		else if (theirN <= 1 << 8)
 			mParams = k2n08s40SimpleParam1;
-		else if (n <= 1 << 12)
+		else if (theirN <= 1 << 12)
 			mParams = k2n12s40SimpleParam1;
-		else if (n <= 1 << 14)
+		else if (theirN <= 1 << 14)
 			mParams = k2n14s40SimpleParam1;
-		else if (n <= 1 << 16)
+		else if (theirN <= 1 << 16)
 			mParams = k2n16s40SimpleParam1;
-		else if (n <= 1 << 20)
+		else if (theirN <= 1 << 20)
 			mParams = k2n20s40SimpleParam1;
-		else if (n <= 1 << 24)
+		else if (theirN <= 1 << 24)
 			mParams = k2n24s40SimpleParam1;
 		else
 			throw std::runtime_error("not implemented");
+
+
+		/*if (theirN <= 1 << 7)
+		{
+			mBinCount[0] = k2n07s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n07s40SimpleParam1.mBinScaler[1];
+		}
+		else if (theirN <= 1 << 8)
+		{
+			mBinCount[0] = k2n08s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n08s40SimpleParam1.mBinScaler[1];
+		}
+		else if (theirN <= 1 << 12)
+		{
+			mBinCount[0] = k2n12s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n12s40SimpleParam1.mBinScaler[1];
+		}
+		else if (theirN <= 1 << 14)
+		{
+			mBinCount[0] = k2n14s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n14s40SimpleParam1.mBinScaler[1];
+		}
+		else if (theirN <= 1 << 16)
+		{
+			mBinCount[0] = k2n16s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n16s40SimpleParam1.mBinScaler[1];
+		}
+		else if (theirN <= 1 << 20)
+		{
+			mBinCount[0] = k2n20s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n20s40SimpleParam1.mBinScaler[1];
+		}
+		else if (theirN <= 1 << 24)
+		{
+			mBinCount[0] = k2n24s40SimpleParam1.mBinScaler[0];
+			mBinCount[1] = k2n24s40SimpleParam1.mBinScaler[1];
+		}
+		else
+			throw std::runtime_error("not implemented");*/
+
+
 
 		if (opt == 0)
 		{
 			mParams.mMaxBinSize[0] = std::pow(2,std::ceil(std::log2(mParams.mMaxBinSize[0])));
 			mParams.mMaxBinSize[1] = std::pow(2, std::ceil(std::log2(mParams.mMaxBinSize[1])));
+			mNumBits[0] = std::log2(mParams.mMaxBinSize[0]);
+			mNumBits[1] = std::log2(mParams.mMaxBinSize[0]);
 		}
 
 
 		mMaxBinSize[0] = mParams.mMaxBinSize[0];
 		mMaxBinSize[1] = mParams.mMaxBinSize[1];
 
-		mBinCount[0] = mParams.mBinScaler[0]*n;
-		mBinCount[1] = mParams.mBinScaler[1] *n;
+		mBinCount[0] = mParams.mBinScaler[0]* theirN;
+		mBinCount[1] = mParams.mBinScaler[1] * theirN;
 
 		mMtx.reset(new std::mutex[mBinCount[0] + mBinCount[1]]);
 		mBins.resize(mBinCount[1] + mBinCount[0]);
 		mNumHashes[0] = mParams.mNumHashes[0];
 		mNumHashes[1] = mParams.mNumHashes[1];
-		mNumBits[0] = mParams.mNumBits[0];
-		mNumBits[1] = mParams.mNumBits[1];
+		
 
 	//	auto log2n = log2ceil(n);
 

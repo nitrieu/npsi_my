@@ -75,13 +75,13 @@ void EQ_EmptrySet_Test_Impl()
 	binSet binRecv;
 		
 	auto sendThrd = std::thread([&]() {
-		binSend.init(0, 2, setSize, psiSecParam, 0);
+		binSend.init(0, 2, setSize, setSize, psiSecParam, 0);
 	
 
 	});
 
 	auto recvThrd = std::thread([&]() {
-		binRecv.init(1, 2, setSize, psiSecParam, 0);
+		binRecv.init(1, 2, setSize, setSize, psiSecParam, 0);
 	
 
 	});

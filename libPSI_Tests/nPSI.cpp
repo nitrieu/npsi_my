@@ -706,7 +706,7 @@ void nParty(u64 myIdx)
 	//### Offline Phasing
 	//##########################
 
-	bins.init(myIdx, mParties, setSize, psiSecParam,opt);
+	bins.init(myIdx, mParties, setSize, setSize, psiSecParam,opt);
 	u64 otCountRecv = bins.mCuckooBins.mBins.size();
 	u64 otCountSend = bins.mSimpleBins.mBins.size();
 

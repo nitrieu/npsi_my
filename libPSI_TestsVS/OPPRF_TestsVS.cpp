@@ -38,6 +38,14 @@ namespace WeGarbleTests
 
 		}
 
+			TEST_METHOD(Communication_Test)
+			{
+				InitDebugPrinting();
+				Communication_Test_Impl();
+
+			}
+
+
 		TEST_METHOD(OPPRFn_EmptrySet_Test)
 		{
 			InitDebugPrinting();

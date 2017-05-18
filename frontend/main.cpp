@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 
 	std::vector<block> mSet;
 
-	u64 setSize = 1 << 16, psiSecParam = 40, bitSize = 128;
+	u64 setSize = 1 << 20, psiSecParam = 40, bitSize = 128;
 
 	u64 nParties, tParties, opt_basedOPPRF;
 	u64 roundOPPRF;

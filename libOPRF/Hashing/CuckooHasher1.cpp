@@ -5,6 +5,7 @@
 #include "Common/Log.h"
 #include "Common/Log1.h"
 #include <numeric>
+#include "Tools/Tools.h"
 
 namespace osuCrypto
 {
@@ -144,7 +145,7 @@ namespace osuCrypto
 
     }
 
-    void CuckooHasher1::init(u64 n,u64 opt)
+    void CuckooHasher1::init(u64 n, u64 theirN, u64 opt)
     {
 
        // if (statSecParam != 40) throw std::runtime_error("not implemented");
@@ -167,11 +168,7 @@ namespace osuCrypto
 			else
 				throw std::runtime_error("not implemented");
 		
-			if (opt == 0)
-			{
-				mParams.mSenderBinSize[0] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[0])));;
-				mParams.mSenderBinSize[1] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[1])));;
-			}
+			
 
         mHashes.resize(n * mParams.mNumHashes[0], u64(-1));
         mHashesView = MatrixView<u64>(mHashes.begin(), mHashes.end(), mParams.mNumHashes[0]);
@@ -182,6 +179,15 @@ namespace osuCrypto
 		mBinCount[0] = (mParams.mBinScaler[0] ) * n;
 		mBinCount[1] = ( mParams.mBinScaler[1]) * n;
 		
+		mParams.mSenderBinSize[0] = getMaxBinSize(mParams.mNumHashes[0] * theirN, mBinCount[0]);
+		mParams.mSenderBinSize[1] = getMaxBinSize(mParams.mNumHashes[1] * theirN, mBinCount[1]);
+
+			if (opt == 0)
+			{
+				mParams.mSenderBinSize[0] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[0])));;
+				mParams.mSenderBinSize[1] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[1])));;
+			}
+
 			mBins.resize(mBinCount[0]+ mBinCount[1]);
 			
     }

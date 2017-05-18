@@ -65,7 +65,7 @@ namespace osuCrypto
 
 		u64 maxRealBinSize();
 
-		void init(u64 n, u64 opt);
+		void init(u64 n, u64 theirN, u64 opt);
 
 		void insertBatch(
 			ArrayView<u64> inputIdxs,

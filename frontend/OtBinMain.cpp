@@ -304,7 +304,7 @@ void party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet)
 		//##########################
 		Timer timer;
 		auto start = timer.setTimePoint("start");
-		bins.init(myIdx, nParties, setSize, psiSecParam, opt);
+		bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -756,7 +756,7 @@ void party3(u64 myIdx, u64 setSize, u64 nTrials)
 
 		auto start = timer.setTimePoint("start");
 
-		bins.init(myIdx, nParties, setSize, psiSecParam, opt);
+		bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -1165,7 +1165,7 @@ void party2(u64 myIdx, u64 setSize)
 
 	auto start = timer.setTimePoint("start");
 
-	bins.init(myIdx, nParties, setSize, psiSecParam, opt);
+	bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
 	u64 otCountSend = bins.mSimpleBins.mBins.size();
 	u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -1586,7 +1586,7 @@ void tparty(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, u64 nTrials)
 		}
 
 
-		bins.init(myIdx, nParties, setSize, psiSecParam, opt);
+		bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -2272,7 +2272,7 @@ void BinSize(u64 setSize, std::vector<block> set,u64 psiSecParam)
 	//std::cout << "maxRealBinSize: " << bins.mSimpleBins.maxRealBinSize() << std::endl;
 
 	binSet bins;
-	bins.init(0, 3, setSize, psiSecParam, 0);
+	bins.init(0, 3, setSize, setSize, psiSecParam, 0);
 
 	bins.hashing2Bins(set, 1);
 	bins.mSimpleBins.maxRealBinSize();
@@ -2423,7 +2423,7 @@ void aug_party(u64 myIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, s
 
 		}
 
-		bins.init(myIdx, nParties, setSize, psiSecParam, opt);
+		bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -3253,7 +3253,7 @@ void tparty1(u64 myIdx, u64 nParties, u64 tParties, u64 setSize, std::vector<blo
 		//##########################
 		Timer timer;
 		auto start = timer.setTimePoint("start");
-		bins.init(myIdx, nParties, setSize, psiSecParam, opt);
+		bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 

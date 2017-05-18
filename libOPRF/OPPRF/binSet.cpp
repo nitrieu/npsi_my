@@ -23,11 +23,12 @@ namespace osuCrypto
     {
     }
 
-    void binSet::init( u64 myIdx, u64 nParties, u64 setSize, u64 statSecParam, u64 opt)
+    void binSet::init( u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 statSecParam, u64 opt)
     {
 		mMyIdx = myIdx;
 		mParties = nParties;
-		mN = setSize;
+		mN = mySetSize;
+		mTheirN = theirSetSize;
 		mStatSecParam = statSecParam;
 		mOpt = opt;
 		mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
@@ -43,8 +44,8 @@ namespace osuCrypto
 		std::vector<OPPRFReceiver> mOpprfRecvs(3);*/
 		
 		
-			mSimpleBins.init(mN, mOpt);
-			mCuckooBins.init(mN, mOpt);
+			mSimpleBins.init(mN, mTheirN, mOpt);
+			mCuckooBins.init(mN, mTheirN, mOpt);
     }
 
 	void binSet::hashing2Bins(std::vector<block>& inputs, int numThreads)
@@ -54,9 +55,11 @@ namespace osuCrypto
         gTimer.setTimePoint("online.recv.start");
 
         // check that the number of inputs is as expected.
-        if (inputs.size() != mN)
-            throw std::runtime_error(LOCATION);	
-
+		if (inputs.size() != mN)
+		{
+			std::cout << "inputs.size() != mN" << std::endl;
+			throw std::runtime_error(LOCATION);
+		}
 		if (mOpt != 0)
 			mXsets = inputs;
 
