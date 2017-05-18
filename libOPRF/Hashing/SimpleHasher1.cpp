@@ -189,8 +189,8 @@ namespace osuCrypto
 
 		if (opt == 0)
 		{
-			mParams.mMaxBinSize[0] = 32;
-			mParams.mMaxBinSize[1] = 64;
+			mParams.mMaxBinSize[0] = std::pow(2,std::ceil(std::log2(mParams.mMaxBinSize[0])));
+			mParams.mMaxBinSize[1] = std::pow(2, std::ceil(std::log2(mParams.mMaxBinSize[1])));
 		}
 
 

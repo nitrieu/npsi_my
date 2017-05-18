@@ -61,7 +61,10 @@ int main(int argc, char** argv)
 
 	
 
-	
+#if 0
+	opt_basedOPPRF = atoi(argv[1]);
+	nParties = atoi(argv[2]);
+	u64 pIdx = atoi(argv[3]);
 
 	//TODO(remove this hack: unconditional zero - sharing);
 	//only one time => very mirror effect on perfomance
@@ -87,13 +90,12 @@ int main(int argc, char** argv)
 		}
 	}
 
-	/*opt_basedOPPRF = atoi(argv[1]);
-	nParties = atoi(argv[2]);
-	u64 pIdx = atoi(argv[3]);
+	
 	std::cout << "pIdx: " << pIdx << "\t";
 	std::cout << "nParties: " << nParties << "\n";
 	aug_party(pIdx, nParties, mSet.size(), mSet, mPRNGSeeds[pIdx], opt_basedOPPRF, 1);
-	return 0;*/
+	return 0;
+#endif
 
 	if (argc == 7) {
 		if (argv[1][0] == '-' && argv[1][1] == 'n')

@@ -169,8 +169,8 @@ namespace osuCrypto
 		
 			if (opt == 0)
 			{
-				mParams.mSenderBinSize[0] = 32;
-				mParams.mSenderBinSize[1] = 64;
+				mParams.mSenderBinSize[0] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[0])));;
+				mParams.mSenderBinSize[1] = std::pow(2, std::ceil(std::log2(mParams.mSenderBinSize[1])));;
 			}
 
         mHashes.resize(n * mParams.mNumHashes[0], u64(-1));
