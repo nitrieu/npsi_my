@@ -16,7 +16,7 @@ namespace osuCrypto
 
 
 
-	struct SimpleParam1
+	struct SimpleParams
 	{
 
 		double mBinScaler[2];
@@ -60,7 +60,7 @@ namespace osuCrypto
 		std::unique_ptr<std::mutex[]> mMtx;
 		std::vector<Bin> mBins;
 		block mHashSeed;
-		SimpleParam1 mParams;
+		SimpleParams mParams;
 		void print(u64 idxParty, bool isIdx, bool isOPRF, bool isMap, bool isPos, u64 opt = 0) const;
 
 		u64 maxRealBinSize();

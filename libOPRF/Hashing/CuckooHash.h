@@ -12,7 +12,7 @@
 
 namespace osuCrypto
 {
-    struct CuckooParam1
+    struct CuckooParams
     {
         double mBinScaler[2]; //first index is for init step, 2nd index for stash step
 		u64 mNumHashes[2];
@@ -82,7 +82,7 @@ namespace osuCrypto
 
         //std::mutex mStashx;
 
-        CuckooParam1 mParams;
+        CuckooParams mParams;
 		block mHashSeed;
 		u64  mRepSize, mInputBitSize, mN;
 		u64 mBinCount[2];//mBinCount[0] for init step, mBinCount[1] for Stash step

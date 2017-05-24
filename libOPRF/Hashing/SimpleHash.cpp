@@ -9,21 +9,21 @@
 namespace osuCrypto
 {
 
-	SimpleParam1 k2n24s40SimpleParam1
+	SimpleParams k2n24s40SimpleParams
 	{ { 1.11,0.17 },{ 3,2 },{ 31,63 },{5,6} };
-	SimpleParam1 k2n20s40SimpleParam1
+	SimpleParams k2n20s40SimpleParams
 	{ { 1.12,0.17 },{ 3,2 },{ 30,63 } ,{ 5,6 } };
-	SimpleParam1 k2n16s40SimpleParam1
+	SimpleParams k2n16s40SimpleParams
 	{ { 1.13,0.16 },{ 3,2 },{ 29,63 },{ 5,6 } };
-	SimpleParam1 k2n14s40SimpleParam1
+	SimpleParams k2n14s40SimpleParams
 	{ { 1.14,0.16 },{ 3,2 },{ 28,63 },{ 5,6 } };
-	SimpleParam1 k2n12s40SimpleParam1
+	SimpleParams k2n12s40SimpleParams
 	{ { 1.17,0.15 },{ 3,2 },{ 27,63 },{ 5,6 } };
-	SimpleParam1 k2n08s40SimpleParam1
+	SimpleParams k2n08s40SimpleParams
 	{ { 1.17,0.15 },{ 3,2 },{ 27,63 },{ 5,6 } };
 
 	// not sure if this needs a stash of 40, but should be safe enough.
-	SimpleParam1 k2n07s40SimpleParam1
+	SimpleParams k2n07s40SimpleParams
 	{ { 1.5,0.17 },{ 3,2 },{ 27,64 },{ 5,6 } };
 
 
@@ -171,57 +171,57 @@ namespace osuCrypto
 		mN = n;
 
 		if (theirN <= 1 << 7)
-			mParams = k2n07s40SimpleParam1;
+			mParams = k2n07s40SimpleParams;
 		else if (theirN <= 1 << 8)
-			mParams = k2n08s40SimpleParam1;
+			mParams = k2n08s40SimpleParams;
 		else if (theirN <= 1 << 12)
-			mParams = k2n12s40SimpleParam1;
+			mParams = k2n12s40SimpleParams;
 		else if (theirN <= 1 << 14)
-			mParams = k2n14s40SimpleParam1;
+			mParams = k2n14s40SimpleParams;
 		else if (theirN <= 1 << 16)
-			mParams = k2n16s40SimpleParam1;
+			mParams = k2n16s40SimpleParams;
 		else if (theirN <= 1 << 20)
-			mParams = k2n20s40SimpleParam1;
+			mParams = k2n20s40SimpleParams;
 		else if (theirN <= 1 << 24)
-			mParams = k2n24s40SimpleParam1;
+			mParams = k2n24s40SimpleParams;
 		else
 			throw std::runtime_error("not implemented");
 
 
 		/*if (theirN <= 1 << 7)
 		{
-			mBinCount[0] = k2n07s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n07s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n07s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n07s40SimpleParams.mBinScaler[1];
 		}
 		else if (theirN <= 1 << 8)
 		{
-			mBinCount[0] = k2n08s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n08s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n08s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n08s40SimpleParams.mBinScaler[1];
 		}
 		else if (theirN <= 1 << 12)
 		{
-			mBinCount[0] = k2n12s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n12s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n12s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n12s40SimpleParams.mBinScaler[1];
 		}
 		else if (theirN <= 1 << 14)
 		{
-			mBinCount[0] = k2n14s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n14s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n14s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n14s40SimpleParams.mBinScaler[1];
 		}
 		else if (theirN <= 1 << 16)
 		{
-			mBinCount[0] = k2n16s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n16s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n16s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n16s40SimpleParams.mBinScaler[1];
 		}
 		else if (theirN <= 1 << 20)
 		{
-			mBinCount[0] = k2n20s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n20s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n20s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n20s40SimpleParams.mBinScaler[1];
 		}
 		else if (theirN <= 1 << 24)
 		{
-			mBinCount[0] = k2n24s40SimpleParam1.mBinScaler[0];
-			mBinCount[1] = k2n24s40SimpleParam1.mBinScaler[1];
+			mBinCount[0] = k2n24s40SimpleParams.mBinScaler[0];
+			mBinCount[1] = k2n24s40SimpleParams.mBinScaler[1];
 		}
 		else
 			throw std::runtime_error("not implemented");*/
