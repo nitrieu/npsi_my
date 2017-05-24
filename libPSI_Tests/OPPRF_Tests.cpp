@@ -66,7 +66,7 @@ void testPointer2(std::vector<block>&  test)
 
 }
 
-void Bit_Position_Test_Impl()
+void Table_Based_Test_Impl()
 {
 	std::cout << sizeof(u8) << std::endl;
 
@@ -227,7 +227,7 @@ void hashing2Bins_Test_Impl()
 
 }
 
-void Bit_Position_Recursive_Test_Impl()
+void Table_Based_Recursive_Test_Impl()
 {
 	u64 setSize = 15;
 	std::vector<block> testSet(setSize);
@@ -305,7 +305,7 @@ void Bit_Position_Recursive_Test_Impl()
 
 }
 
-void Bit_Position_Random_Test_Impl()
+void Table_Based_Random_Test_Impl()
 {
 	u64 power = 5;
 	u64 setSize = 1 << power;

@@ -78,17 +78,17 @@ namespace WeGarbleTests
 
  
 
-       /* TEST_METHOD(Bit_Position_Test)
+       /* TEST_METHOD(Table_Based_Test)
         {
             InitDebugPrinting();
-			Bit_Position_Test_Impl();
+			Table_Based_Test_Impl();
         }*/
 
 
-		/*TEST_METHOD(Bit_Position_Rec_Test)
+		/*TEST_METHOD(Table_Based_Rec_Test)
 		{
 			InitDebugPrinting();
-			Bit_Position_Recursive_Test_Impl();
+			Table_Based_Recursive_Test_Impl();
 		}*/
 		/*TEST_METHOD(OPPRF_EmptrySet_hashing_Test)
 		{
@@ -117,10 +117,10 @@ namespace WeGarbleTests
 			InitDebugPrinting();
 			findMaxBinSize_Test_Impl();
 		}
-		TEST_METHOD(Bit_Position_Random_Test)
+		TEST_METHOD(Table_Based_Random_Test)
 		{
 			InitDebugPrinting();
-			Bit_Position_Random_Test_Impl();
+			Table_Based_Random_Test_Impl();
 		}
 		TEST_METHOD(testShareValue_Test)
 		{

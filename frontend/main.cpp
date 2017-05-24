@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 {
 	//std::cout << "fffffffff\n";
 	//myCuckooTest_stash();
-	//Bit_Position_Random_Test();
+	//Table_Based_Random_Test();
 	//return 0;
 	//OPPRF2_EmptrySet_Test_Main();
 	//OPPRFn_EmptrySet_Test_Main();
@@ -52,11 +52,11 @@ int main(int argc, char** argv)
 		mSet[i] = prng.get<block>();
 
 
-	//BinSize(setSize, mSet, psiSecParam);
+	//getBinSizeDistribution(setSize, mSet, psiSecParam);
 	//return 0;
 
 	
-
+//Augmented Model
 #if 1
 	opt_basedOPPRF = atoi(argv[1]);
 	nParties = atoi(argv[2]);
@@ -93,6 +93,7 @@ int main(int argc, char** argv)
 	return 0;
 #endif
 
+//Standard Model
 	if (argc == 7) {
 		if (argv[1][0] == '-' && argv[1][1] == 'n')
 			nParties = atoi(argv[2]);
