@@ -51,6 +51,7 @@ namespace osuCrypto
 		u64  mRepSize, mInputBitSize, mN;
 		u64 mBinCount[2], mMaxBinSize[2], mNumHashes[2], mNumBits[2];
 
+		//remember hIdx for the combined keys
 		//mOpprfs[IdxParty][inputIdx][hIdx]
 		std::vector<std::vector<std::vector<block>>> mOprfs;
 		u64 testMaxBinSize;

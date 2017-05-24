@@ -1469,7 +1469,7 @@ namespace osuCrypto
 
 		std::cout << "s[" << IdxP << "]-dataSent(bytes)" << maskBFView.size()[0] * maskBFView.size()[1] << "----------\n";
 
-		//std::cout << "\ns[" << IdxP << "]-GarbleBF[1][3]" << GarbleBF[1][3] << "\n";
+		//std::cout << "\ns[" << IdxP << "]-arrayMask[1][3]" << arrayMask[1][3] << "\n";
 
 
 		auto& chl = *chls[0];
@@ -1947,7 +1947,7 @@ namespace osuCrypto
 									auto theirBFMask = ZeroBlock;
 									memcpy(&theirBFMask, maskBFView[hIdx*mBfSize + idx].data(), bins.mMaskSize);
 									/*if(hIdx==1&&idx==3)
-									std::cout << "\nr[" << IdxP << "]-GarbleBF[1][3]" << theirBFMask << "\n";*/
+									std::cout << "\nr[" << IdxP << "]-arrayMask[1][3]" << theirBFMask << "\n";*/
 
 									blkY = blkY ^ theirBFMask;
 								}
@@ -1975,6 +1975,158 @@ namespace osuCrypto
 
 
 	}
+
+	//for 2-party PSI
+//	void OPPRFSender::sendPlainPRF(u64 IdxP, binSet& bins, std::vector<block>& plaintexts, const std::vector<Channel*>& chls)
+//	{
+//		if (plaintexts.size() != mN)
+//			throw std::runtime_error(LOCATION);
+//
+//		u32 numHashes = bins.mSimpleBins.mNumHashes[0] + bins.mSimpleBins.mNumHashes[1];
+//
+//
+//		
+//		//each x has 5 diffirent values oprf1(x),...,oprf5(x)
+//		//which presented as oprf1(x)||oprf2(x)||...||oprf5(x)
+//		//reuse BF array
+//		mBfSize = mN;
+//
+//
+//		bins.mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN), 8) / 8;
+//
+//		if (bins.mMaskSize > sizeof(block))
+//			throw std::runtime_error("masked are stored in blocks, so they can exceed that size");
+//
+//		std::vector<std::thread>  thrds(chls.size());
+//		// std::vector<std::thread>  thrds(1);        
+//
+//
+//		uPtr<Buff> sendMaskBuff(new Buff);
+//		sendMaskBuff->resize(mBfSize* bins.mMaskSize*numHashes);
+//		auto maskBFView = sendMaskBuff->getMatrixView<u8>(bins.mMaskSize);
+//
+//		//oprf1(x)||oprf2(x)||...||oprf5(x)
+//		std::vector<std::vector<block>> arrayMask(numHashes);
+//		for (u64 hIdx = 0; hIdx < arrayMask.size(); ++hIdx)
+//		{
+//			arrayMask[hIdx].resize(mBfSize);
+//		}
+//
+//		//create permute array to add my mask in the permuted positions
+//		//5 hash functions
+//		std::array<std::vector<u64>, 5>permute;
+//		PRNG prng(ZeroBlock);
+//		for (u64 j = 0; j < numHashes; j++)
+//		{
+//			permute[j].resize(mN);
+//			for (u64 i = 0; i < permute.size(); i++)
+//			{
+//				permute[j][i] = i;
+//			}
+//			//permute position
+//			std::shuffle(permute[j].begin(), permute[j].end(), prng);
+//		}
+//
+//
+//		gTimer.setTimePoint("online.send.spaw");
+//
+//		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
+//		{
+//			auto seed = mPrng.get<block>();
+//			thrds[tIdx] = std::thread([&, tIdx, seed]() {
+//
+//				PRNG prng(seed);
+//
+//				if (tIdx == 0) gTimer.setTimePoint("online.send.thrdStart");
+//
+//				auto& chl = *chls[tIdx];
+//				const u64 stepSize = 16;
+//
+//#pragma region sendShare
+//#if 1
+//				if (tIdx == 0) gTimer.setTimePoint("online.send.sendShare");
+//
+//				u64 idxStart, idxEnd;
+//
+//				idxStart = tIdx       * mN / thrds.size();
+//				idxEnd = (tIdx + 1) * mN / thrds.size();
+//
+//
+//				if (tIdx == 0) gTimer.setTimePoint("online.send.masks.init.step");
+//
+//				for (u64 inputIdx = idxStart; inputIdx < idxEnd;)
+//				{
+//					u64 currentStepSize = std::min(stepSize, idxEnd - inputIdx);
+//
+//					for (u64 stepIdx = 0; stepIdx < currentStepSize; ++inputIdx, ++stepIdx)
+//					{
+//						u64 baseMaskIdx = stepIdx;
+//						int MaskIdx = 0;
+//
+//						std::set<u64> idxs;
+//
+//						//GBF
+//						for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
+//						{
+//							
+//							arrayMask[hIdx][inputIdx] = bins.mSimpleBins.mOprfs[IdxP][inputIdx][hIdx];
+//							memcpy(maskBFView[hIdx*mBfSize + permute[hIdx][inputIdx]].data(), (u8*)&arrayMask[hIdx][inputIdx], bins.mMaskSize);
+//
+//
+//							/*	if (inputIdx == 0)
+//							{
+//							block y = plaintexts[inputIdx] ^ bins.mSimpleBins.mOprfs[IdxP][inputIdx][hIdx];
+//
+//							std::cout << "inputIdx[" << inputIdx << "]-hIdx[" << hIdx << "]-OPRF" << bins.mSimpleBins.mOprfs[IdxP][inputIdx][hIdx];
+//							std::cout << "\n----" << y << std::endl;
+//							}*/
+//
+//						}
+//
+//					}
+//
+//				}
+//
+//
+//
+//				if (tIdx == 0) gTimer.setTimePoint("online.compute x y");
+//#endif
+//#pragma endregion
+//
+//			});
+//		}
+//
+//		for (auto& thrd : thrds)
+//			thrd.join();
+//
+//		for (u64 hIdx = 0; hIdx < numHashes; ++hIdx)
+//		{
+//			for (u64 i = 0; i < arrayMask[hIdx].size(); ++i)
+//			{
+//				if (eq(arrayMask[hIdx][i], ZeroBlock))
+//				{
+//					arrayMask[hIdx][i] = mPrng.get<block>();
+//					memcpy(maskBFView[hIdx*mBfSize + i].data(), (u8*)&arrayMask[hIdx][i], bins.mMaskSize);
+//
+//				}
+//			}
+//		}
+//
+//		//std::cout << "\ns[" << IdxP << "]-maskBFView.size() " << maskBFView.size()[0] << "\n";
+//		//std::cout << "\ns[" << IdxP << "]-mBfSize " << mBfSize << "\n";
+//		//std::cout << "\ns[" << IdxP << "]-mMaskSize " << bins.mMaskSize << "\n";
+//
+//
+//		std::cout << "s[" << IdxP << "]-dataSent(bytes)" << maskBFView.size()[0] * maskBFView.size()[1] << "----------\n";
+//
+//		//std::cout << "\ns[" << IdxP << "]-arrayMask[1][3]" << arrayMask[1][3] << "\n";
+//
+//
+//		auto& chl = *chls[0];
+//		chl.asyncSend(std::move(sendMaskBuff));
+//
+//
+//	}
 
 }
 
