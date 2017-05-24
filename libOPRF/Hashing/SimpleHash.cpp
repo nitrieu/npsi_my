@@ -1,4 +1,4 @@
-#include "SimpleHasher1.h"
+#include "SimpleHash.h"
 #include "Crypto/sha1.h"
 #include "Crypto/PRNG.h"
 #include <random>
@@ -27,17 +27,17 @@ namespace osuCrypto
 	{ { 1.5,0.17 },{ 3,2 },{ 27,64 },{ 5,6 } };
 
 
-	SimpleHasher1::SimpleHasher1()
+	SimpleHash::SimpleHash()
 	{
 	}
 
 
-	SimpleHasher1::~SimpleHasher1()
+	SimpleHash::~SimpleHash()
 	{
 	}
 
 
-	u64 SimpleHasher1::maxRealBinSize() {
+	u64 SimpleHash::maxRealBinSize() {
 	
 		u64 rs=0;
 		for (u64 i = 0; i < mBins.size(); ++i)
@@ -74,14 +74,14 @@ namespace osuCrypto
 		return rs;
 	}
 
-	void SimpleHasher1::print(u64 IdxP, bool isIdx, bool isOPRF, 
+	void SimpleHash::print(u64 IdxP, bool isIdx, bool isOPRF, 
 		bool isMap, bool isPos, u64 opt) const
 	{
 
 		std::cout << IoStream::lock;
 		int cnt = 0;
-		//std::cout << "SimpleHasher1  " << std::endl;
-		Log::out << "SimpleHasher1  " << Log::endl;
+		//std::cout << "SimpleHash  " << std::endl;
+		Log::out << "SimpleHash  " << Log::endl;
 		//for (u64 i = 0; i < 10; ++i)
 		for (u64 i = 0; i < mBins.size(); ++i)
 		{
@@ -166,7 +166,7 @@ namespace osuCrypto
 		return std::log(bins * std::pow(balls * exp(1) / (bins * k), k)) / std::log(2);
 	}
 
-	void SimpleHasher1::init(u64 n, u64 theirN,u64 opt)
+	void SimpleHash::init(u64 n, u64 theirN,u64 opt)
 	{	
 		mN = n;
 
@@ -303,7 +303,7 @@ namespace osuCrypto
 
 	}
 	
-	void SimpleHasher1::insertBatch(ArrayView<u64> inputIdxs, MatrixView<u64> hashs)
+	void SimpleHash::insertBatch(ArrayView<u64> inputIdxs, MatrixView<u64> hashs)
 	{
 		for (u64 j = 0; j < inputIdxs.size(); ++j)
 		{

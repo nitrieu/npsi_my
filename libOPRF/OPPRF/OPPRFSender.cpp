@@ -1548,7 +1548,7 @@ namespace osuCrypto
 							{
 								u64 baseMaskIdx = stepIdx;
 								auto mask = maskView[baseMaskIdx];
-								BitPosition b;
+								TableBased b;
 								b.mMaxBitSize = mTheirBins_mNumBits;
 								for (u64 i = 0; i < b.mMaxBitSize; i++)
 								{

@@ -2,7 +2,7 @@
 #include "Common/Defines.h"
 #include "Network/Channel.h"
 #include "NChooseOne/NcoOtExt.h"
-#include "Hashing/SimpleHasher1.h"
+#include "Hashing/SimpleHash.h"
 
 namespace osuCrypto
 {
@@ -21,7 +21,7 @@ namespace osuCrypto
 
         u64 mN, mStatSecParam, mNcoInputBlkSize,  mOtMsgBlkSize;
         block mHashingSeed;
-        SimpleHasher1 mBins;
+        SimpleHash mBins;
         PRNG mPrng;
 
         std::vector<std::unique_ptr<NcoOtExtSender>> mOtSends;

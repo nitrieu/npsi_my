@@ -4,7 +4,7 @@
 #include "Common/BitVector.h"
 #include "Common/ArrayView.h"
 #include "Common/MatrixView.h"
-#include "Hashing/BitPosition.h"
+#include "Hashing/Hints.h"
 //#include <mutex>
 #include <atomic>
 
@@ -25,11 +25,11 @@ namespace osuCrypto
 
 
 
-    class CuckooHasher1
+    class CuckooHash
     {
     public:
-        CuckooHasher1();
-        ~CuckooHasher1();
+        CuckooHash();
+        ~CuckooHash();
 
         struct Bin
         {
@@ -77,8 +77,8 @@ namespace osuCrypto
 		std::mutex mInsertBin;
         u64 mTotalTries;
 
-        bool operator==(const CuckooHasher1& cmp)const;
-        bool operator!=(const CuckooHasher1& cmp)const;
+        bool operator==(const CuckooHash& cmp)const;
+        bool operator!=(const CuckooHash& cmp)const;
 
         //std::mutex mStashx;
 

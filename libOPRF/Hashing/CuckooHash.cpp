@@ -1,4 +1,4 @@
-#include "CuckooHasher1.h"
+#include "CuckooHash.h"
 #include "Crypto/sha1.h"
 #include "Crypto/PRNG.h"
 #include <random>
@@ -37,16 +37,16 @@ namespace osuCrypto
 	{ { 1.5,0.17 },{ 3,2 },{ 27,64 } };
 
 
-    CuckooHasher1::CuckooHasher1()
+    CuckooHash::CuckooHash()
         :mTotalTries(0)
     {
     }
 
-    CuckooHasher1::~CuckooHasher1()
+    CuckooHash::~CuckooHash()
     {
     }
 
-    bool CuckooHasher1::operator==(const CuckooHasher1 & cmp) const
+    bool CuckooHash::operator==(const CuckooHash & cmp) const
     {
         if (mBins.size() != cmp.mBins.size())
             throw std::runtime_error("");
@@ -75,12 +75,12 @@ namespace osuCrypto
         return true;
     }
 
-    bool CuckooHasher1::operator!=(const CuckooHasher1 & cmp) const
+    bool CuckooHash::operator!=(const CuckooHash & cmp) const
     {
         return !(*this == cmp);
     }
 
-    void CuckooHasher1::print(u64 IdxP, bool isIdx, bool isOPRF, bool isMap) const
+    void CuckooHash::print(u64 IdxP, bool isIdx, bool isOPRF, bool isMap) const
     {
 		std::cout << IoStream::lock;
 		//std::cout << "Cuckoo Hasher  " << std::endl;
@@ -145,7 +145,7 @@ namespace osuCrypto
 
     }
 
-    void CuckooHasher1::init(u64 n, u64 theirN, u64 opt)
+    void CuckooHash::init(u64 n, u64 theirN, u64 opt)
     {
 
        // if (statSecParam != 40) throw std::runtime_error("not implemented");
@@ -192,7 +192,7 @@ namespace osuCrypto
 			
     }
 
-    void CuckooHasher1::insert(u64 inputIdx, ArrayView<u64> hashs)
+    void CuckooHash::insert(u64 inputIdx, ArrayView<u64> hashs)
     {
         if (mHashesView[inputIdx][0] != -1)
         {
@@ -204,7 +204,7 @@ namespace osuCrypto
         insertHelper(inputIdx, 0, 0);
     }
 
-    void CuckooHasher1::insertBatch(
+    void CuckooHash::insertBatch(
         ArrayView<u64> inputIdxs,
         MatrixView<u64> hashs,
         Workspace& w)
@@ -297,7 +297,7 @@ namespace osuCrypto
 		
 		/*	ArrayView<u64> stashIdxs(inputIdxs.begin(), inputIdxs.begin() + remaining, false);
 			MatrixView<u64> stashHashs(hashs.data(), remaining, mParams.mNumHashes, false);
-			CuckooHasher1::Workspace stashW(remaining);
+			CuckooHash::Workspace stashW(remaining);
 			std::vector<Bin> mStashBins;*/
 			//mStashBins.insertBatch(stashIdxs, stashHashs, stashW, false);
 		std::lock_guard<std::mutex> lock(mInsertBin);
@@ -321,7 +321,7 @@ namespace osuCrypto
 
     }
 
-	void CuckooHasher1::insertStashBatch(
+	void CuckooHash::insertStashBatch(
 		ArrayView<u64> inputIdxs,
 		MatrixView<u64> hashs,
 		Workspace& w)
@@ -423,7 +423,7 @@ namespace osuCrypto
 	}
 
 
-    void CuckooHasher1::insertHelper(u64 inputIdx, u64 hashIdx, u64 numTries)
+    void CuckooHash::insertHelper(u64 inputIdx, u64 hashIdx, u64 numTries)
     {
         //++mTotalTries;
 
@@ -476,7 +476,7 @@ namespace osuCrypto
 
     }
 
-	void CuckooHasher1::insertStashHelper(u64 inputIdx, u64 hashIdx, u64 numTries)
+	void CuckooHash::insertStashHelper(u64 inputIdx, u64 hashIdx, u64 numTries)
 	{
 		//++mTotalTries;
 
@@ -532,7 +532,7 @@ namespace osuCrypto
 
 #if 0
 
-    u64 CuckooHasher1::find(ArrayView<u64> hashes)
+    u64 CuckooHash::find(ArrayView<u64> hashes)
     {
         if (mParams.mNumHashes[0] == 2)
         {
@@ -667,7 +667,7 @@ namespace osuCrypto
     }
 
 
-    u64 CuckooHasher1::findBatch(
+    u64 CuckooHash::findBatch(
         MatrixView<u64> hashes,
         ArrayView<u64> idxs,
         Workspace& w)
@@ -760,22 +760,22 @@ namespace osuCrypto
 #endif
 
 
-    bool CuckooHasher1::Bin::isEmpty() const
+    bool CuckooHash::Bin::isEmpty() const
     {
         return mVal == u64(-1);
     }
 
-    u64 CuckooHasher1::Bin::idx() const
+    u64 CuckooHash::Bin::idx() const
     {
         return mVal  & (u64(-1) >> 8);
     }
 
-    u64 CuckooHasher1::Bin::hashIdx() const
+    u64 CuckooHash::Bin::hashIdx() const
     {
         return mVal >> 56;
     }
 
-    void CuckooHasher1::Bin::swap(u64 & idx, u64 & hashIdx)
+    void CuckooHash::Bin::swap(u64 & idx, u64 & hashIdx)
     {
         u64 newVal = idx | (hashIdx << 56);
 #ifdef THREAD_SAFE_CUCKOO

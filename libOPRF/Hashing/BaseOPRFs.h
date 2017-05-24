@@ -23,11 +23,11 @@
 namespace osuCrypto
 {
 
-	class BitPosition
+	class TableBased
 	{
 	public:
-		BitPosition();
-		~BitPosition();
+		TableBased();
+		~TableBased();
 
 
 		u64 mRealBitSize, mMaxBitSize, mNumTrial;

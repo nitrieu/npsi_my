@@ -73,9 +73,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Hashing\BitPosition.cpp" />
-    <ClCompile Include="Hashing\CuckooHasher1.cpp" />
-    <ClCompile Include="Hashing\SimpleHasher1.cpp" />
+    <ClCompile Include="Hashing\Hints.cpp" />
+    <ClCompile Include="Hashing\CuckooHash.cpp" />
+    <ClCompile Include="Hashing\SimpleHash.cpp" />
     <ClCompile Include="OPPRF\EQReceiver.cpp" />
     <ClCompile Include="OPPRF\EQSender.cpp" />
     <ClCompile Include="OPPRF\binSet.cpp" />
@@ -83,9 +83,9 @@
     <ClCompile Include="OPPRF\OPPRFSender.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Hashing\BitPosition.h" />
-    <ClInclude Include="Hashing\CuckooHasher1.h" />
-    <ClInclude Include="Hashing\SimpleHasher1.h" />
+    <ClInclude Include="Hashing\Hints.h" />
+    <ClInclude Include="Hashing\CuckooHash.h" />
+    <ClInclude Include="Hashing\SimpleHash.h" />
     <ClInclude Include="OPPRF\EQReceiver.h" />
     <ClInclude Include="OPPRF\EQSender.h" />
     <ClInclude Include="OPPRF\binSet.h" />

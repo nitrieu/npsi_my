@@ -7,7 +7,6 @@
 
 #include <fstream>
 using namespace osuCrypto;
-#include "util.h"
 
 #include "Common/Defines.h"
 #include "NChooseOne/KkrtNcoOtReceiver.h"
@@ -2984,8 +2983,8 @@ void Bit_Position_Random_Test()
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 
 
-	SimpleHasher1 mSimpleBins;
-	mSimpleBins.init(setSize, opt);
+	SimpleHash mSimpleBins;
+	mSimpleBins.init(setSize, setSize, 0);
 	std::vector<u64> tempIdxBuff(setSize);
 	MatrixView<u64> hashes(setSize, mSimpleBins.mNumHashes[0]);
 

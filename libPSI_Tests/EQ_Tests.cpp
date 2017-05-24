@@ -15,8 +15,8 @@
 #include "NChooseOne/Oos/OosNcoOtReceiver.h"
 #include "NChooseOne/Oos/OosNcoOtSender.h"
 
-#include "Hashing/CuckooHasher1.h"
-#include "Hashing/BitPosition.h"
+#include "Hashing/CuckooHash.h"
+#include "Hashing/Hints.h"
 #include "Common/Log.h"
 #include "Common/Log1.h"
 #include <array>

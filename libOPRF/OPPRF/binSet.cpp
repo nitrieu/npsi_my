@@ -11,7 +11,7 @@
 
 #include "TwoChooseOne/IknpOtExtReceiver.h"
 #include "TwoChooseOne/IknpOtExtSender.h"
-#include "Hashing/BitPosition.h"
+#include "Hashing/Hints.h"
 //#define PRINT
 namespace osuCrypto
 {
@@ -79,7 +79,7 @@ namespace osuCrypto
 			insertFuture(insertProm.get_future()),
 			insertStashFuture(insertStashProm.get_future());
 
-      //  CuckooHasher1 maskMap;
+      //  CuckooHash maskMap;
         //maskMap.init(mN * mBins.mMaxBinSize, mStatSecParam, chls.size() > 1);
 
 		// this mutex is used to guard inserting things into the bin
@@ -124,7 +124,7 @@ namespace osuCrypto
 					
 					std::vector<block> tempMaskBuff(currentStepSize);
 					std::vector<u64> tempIdxBuff(currentStepSize); 
-					CuckooHasher1::Workspace w(tempMaskBuff.size());
+					CuckooHash::Workspace w(tempMaskBuff.size());
 					MatrixView<u64> hashes(currentStepSize,mCuckooBins.mParams.mNumHashes[0]);
 
                     for (u64 j = 0; j < currentStepSize; ++j)
@@ -148,7 +148,7 @@ namespace osuCrypto
 					insertProm.set_value();
 
 				if (tIdx == 0) {
-					CuckooHasher1::Workspace stashW(mCuckooBins.mStashIdxs.size());
+					CuckooHash::Workspace stashW(mCuckooBins.mStashIdxs.size());
 					MatrixView<u64> stashHashes(mCuckooBins.mStashIdxs.size(), mCuckooBins.mParams.mNumHashes[1]);
 
 					for (u64 j = 0; j < mCuckooBins.mStashIdxs.size(); ++j)

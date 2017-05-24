@@ -1,4 +1,4 @@
-#include "BitPosition.h"
+#include "BaseOPRFs.h"
 #include "Crypto/sha1.h"
 #include "Crypto/PRNG.h"
 #include <random>
@@ -40,16 +40,16 @@ namespace osuCrypto
 	{
 	}
 
-	BitPosition::BitPosition()
+	TableBased::TableBased()
 	{
 	}
 
-	BitPosition::~BitPosition()
+	TableBased::~TableBased()
 	{
 	}
 
 
-	void BitPosition::print() const
+	void TableBased::print() const
 	{
 		std::cout << "mPos: \n";
 		for (auto it = mPos.begin(); it != mPos.end(); ++it)
@@ -63,7 +63,7 @@ namespace osuCrypto
 		}
 
 	}
-	void BitPosition::init(/*u64 numRealCodeWord,*/ u64 numMaxBitSize)
+	void TableBased::init(/*u64 numRealCodeWord,*/ u64 numMaxBitSize)
 	{
 		/*mRealBitSize= std::floor(std::log2(numRealCodeWord)) + 1;*/
 		mMaxBitSize = numMaxBitSize;
@@ -71,7 +71,7 @@ namespace osuCrypto
 	}
 
 	//#################Table based
-	bool BitPosition::getMasks(std::vector<block>& codeword) {
+	bool TableBased::getMasks(std::vector<block>& codeword) {
 
 		u8 rs, idx;
 		for (int i = 0; i < codeword.size(); i++) {
@@ -98,7 +98,7 @@ namespace osuCrypto
 		}
 		return true;
 	}
-	void BitPosition::getMask(block& codeword, u8& mask) {
+	void TableBased::getMask(block& codeword, u8& mask) {
 
 		u8 rs, idx;
 		mask = 0;
@@ -114,7 +114,7 @@ namespace osuCrypto
 		}
 	}
 
-	int BitPosition::midIdx(std::vector<block>& codewords, int length)
+	int TableBased::midIdx(std::vector<block>& codewords, int length)
 	{
 		int temp = 0;
 		int idx = 0;
@@ -169,7 +169,7 @@ namespace osuCrypto
 
 	std::vector<std::vector<block>> testSet;
 	int idxS = -1;
-	void BitPosition::getPosHelper(std::vector<block>& codewords, int length)
+	void TableBased::getPosHelper(std::vector<block>& codewords, int length)
 	{
 		idxS++;
 		int setSize = codewords.size();
@@ -215,7 +215,7 @@ namespace osuCrypto
 		}
 	}
 
-	void BitPosition::getPos1(std::vector<block>& codewords, int length)
+	void TableBased::getPos1(std::vector<block>& codewords, int length)
 	{
 		bool isFind = false;
 
@@ -321,12 +321,12 @@ namespace osuCrypto
 			}
 		}
 	}
-	void BitPosition::getPos(std::vector<block>& codewords, int length)
+	void TableBased::getPos(std::vector<block>& codewords, int length)
 	{
 		getPosHelper(codewords, length);
 		//getRandPos();									 
 	}
-	void BitPosition::getRandPos()
+	void TableBased::getRandPos()
 	{
 		while (mPos.size()<mMaxBitSize)
 		{

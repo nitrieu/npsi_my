@@ -265,7 +265,7 @@ namespace osuCrypto
        // ByteStream maskBuffer;
 
 
-      //  CuckooHasher1 maskMap;
+      //  CuckooHash maskMap;
         //maskMap.init(mN * mBins.mMaxBinSize, mStatSecParam, chls.size() > 1);
 
 		// this mutex is used to guard inserting things into the bin
@@ -326,7 +326,7 @@ namespace osuCrypto
 
 					std::vector<block> tempMaskBuff(currentStepSize);
 					std::vector<u64> tempIdxBuff(currentStepSize); 
-					CuckooHasher1::Workspace w(tempMaskBuff.size());
+					CuckooHash::Workspace w(tempMaskBuff.size());
 					MatrixView<u64> hashes(currentStepSize,mBins.mParams.mNumHashes);
 
                     for (u64 j = 0; j < currentStepSize; ++j)
@@ -348,7 +348,7 @@ namespace osuCrypto
 					std::cout << tempMaskBuff[5];
 */
 				//	std::vector<u64> idxs(i, i+ currentStepSize);
-				//	CuckooHasher1::Workspace w(currentStepSize);
+				//	CuckooHash::Workspace w(currentStepSize);
 
                 }
 

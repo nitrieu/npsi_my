@@ -11,7 +11,7 @@
 
 #include "TwoChooseOne/IknpOtExtReceiver.h"
 #include "TwoChooseOne/IknpOtExtSender.h"
-#include "Hashing/BitPosition.h"
+#include "Hashing/Hints.h"
 
 
 //#define PRINT
@@ -840,7 +840,7 @@ namespace osuCrypto
 							{
 								u64 baseMaskIdx = stepIdx;
 								auto mask = maskView[baseMaskIdx];
-								BitPosition b;
+								TableBased b;
 								b.mMaxBitSize = mTheirBins_mNumBits;
 								for (u64 i = 0; i < b.mMaxBitSize; i++)
 								{

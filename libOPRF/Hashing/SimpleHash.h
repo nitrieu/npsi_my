@@ -2,7 +2,7 @@
 #include "Common/Defines.h"
 #include "Common/BitVector.h"
 #include "Common/ArrayView.h"
-#include "Hashing/BitPosition.h"
+#include "Hashing/Hints.h"
 namespace osuCrypto
 {
 	//// a list of {{set size, bit size}}
@@ -30,11 +30,11 @@ namespace osuCrypto
 		u64 mSenderBinStashSize;*/
 	};
 
-	class SimpleHasher1
+	class SimpleHash
 	{
 	public:
-		SimpleHasher1();
-		~SimpleHasher1();
+		SimpleHash();
+		~SimpleHash();
 
 		
 		//typedef std::vector<u64,block> MtBin;
@@ -45,7 +45,7 @@ namespace osuCrypto
 								   //hash index used for mIdx. Only use when combined hints
 								   //one can think mIdx and hIdx as a pair <mIdx,hIdx>....
 			std::vector<u64> hIdx;
-			std::vector<BitPosition> mBits;//mBits[IdxParty]
+			std::vector<TableBased> mBits;//mBits[IdxParty]
 			std::vector<std::vector<block>> mValOPRF; //mValOPRF[IdxParty][mIdx]
 		};
 		u64  mRepSize, mInputBitSize, mN;

@@ -3,8 +3,8 @@
 #include "Common/Defines.h"
 #include "Network/Channel.h"
 #include "NChooseOne/NcoOtExt.h"
-#include "Hashing/CuckooHasher1.h"
-#include "Hashing/SimpleHasher1.h"
+#include "Hashing/CuckooHash.h"
+#include "Hashing/SimpleHash.h"
 
 namespace osuCrypto
 {
@@ -38,8 +38,8 @@ namespace osuCrypto
 		std::vector<block> mXsets;
 		
 
-		CuckooHasher1 mCuckooBins;
-		SimpleHasher1 mSimpleBins;
+		CuckooHash mCuckooBins;
+		SimpleHash mSimpleBins;
       
 
 		void init(u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 statSecParam, u64 opt);

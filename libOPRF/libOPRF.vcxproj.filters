@@ -75,15 +75,6 @@
     <ClCompile Include="OPPRF\OPPRFSender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hashing\CuckooHasher1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Hashing\SimpleHasher1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Hashing\BitPosition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OPPRF\binSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -91,6 +82,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OPPRF\EQSender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hashing\Hints.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hashing\CuckooHash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hashing\SimpleHash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,15 +101,6 @@
     <ClInclude Include="OPPRF\OPPRFSender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Hashing\CuckooHasher1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hashing\SimpleHasher1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hashing\BitPosition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OPPRF\binSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,6 +108,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OPPRF\EQSender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hashing\Hints.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hashing\CuckooHash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hashing\SimpleHash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

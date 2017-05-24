@@ -15,8 +15,8 @@
 #include "NChooseOne/Oos/OosNcoOtReceiver.h"
 #include "NChooseOne/Oos/OosNcoOtSender.h"
 
-#include "Hashing/CuckooHasher1.h"
-#include "Hashing/BitPosition.h"
+#include "Hashing/CuckooHash.h"
+#include "Hashing/Hints.h"
 #include "Common/Log.h"
 #include "Common/Log1.h"
 #include <array>
@@ -246,7 +246,7 @@ void Bit_Position_Recursive_Test_Impl()
 	//	testSet[i].m128i_u16[2] = 1 << i;
 	//}
 
-	BitPosition b;
+	TableBased b;
 
 #if 0
 	block test = ZeroBlock;
@@ -313,7 +313,7 @@ void Bit_Position_Random_Test_Impl()
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 
 
-	SimpleHasher1 mSimpleBins;
+	SimpleHash mSimpleBins;
 	mSimpleBins.init(setSize, setSize,0);
 	std::vector<u64> tempIdxBuff(setSize);
 	MatrixView<u64> hashes(setSize, mSimpleBins.mNumHashes[0]);

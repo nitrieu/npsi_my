@@ -4,21 +4,17 @@
 #include "Network/BtEndpoint.h"
 
 using namespace std;
-#include "UnitTests.h" 
 #include "Common/Defines.h"
 using namespace osuCrypto;
 
-#include "bloomFilterMain.h"
-#include "dcwMain.h"
-#include "dktMain.h"
 #include "OtBinMain.h"
-#include "bitPosition.h"
 
 #include <numeric>
 #include "Common/Log.h"
 //int miraclTestMain();
 
 #include "cuckoo/cuckooTests.h"
+
 void usage(const char* argv0)
 {
 	std::cout << "Error! Please use:" << std::endl;
@@ -46,7 +42,7 @@ int main(int argc, char** argv)
 
 	std::vector<block> mSet;
 
-	u64 setSize = 1 << 20, psiSecParam = 40, bitSize = 128;
+	u64 setSize = 1 << 12, psiSecParam = 40, bitSize = 128;
 
 	u64 nParties, tParties, opt_basedOPPRF;
 	u64 roundOPPRF;
@@ -61,7 +57,7 @@ int main(int argc, char** argv)
 
 	
 
-#if 0
+#if 1
 	opt_basedOPPRF = atoi(argv[1]);
 	nParties = atoi(argv[2]);
 	u64 pIdx = atoi(argv[3]);
