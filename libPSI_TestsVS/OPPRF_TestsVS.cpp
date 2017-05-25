@@ -1,6 +1,7 @@
 #include "stdafx.h"
 //#include "CppUnitTest.h"
 #include "OPPRF_Tests.h"
+#include "PM_Tests.h"
 #include "EQ_Tests.h"
 //#include "nPSI.h"
 #include "Common.h"
@@ -42,6 +43,13 @@ namespace WeGarbleTests
 			{
 				InitDebugPrinting();
 				Communication_Test_Impl();
+
+			}
+
+			TEST_METHOD(PM_Test)
+			{
+				InitDebugPrinting();
+				PM_Test_Impl();
 
 			}
 
