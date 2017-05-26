@@ -46,6 +46,15 @@ namespace WeGarbleTests
 
 			}
 
+			
+
+				TEST_METHOD(IknpOtExt4_Test)
+			{
+				InitDebugPrinting();
+				IknpOtExt4_Test_Impl();
+
+			}
+
 			TEST_METHOD(PM_Test)
 			{
 				InitDebugPrinting();
