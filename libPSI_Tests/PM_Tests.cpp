@@ -30,7 +30,6 @@
 #include "NChooseOne/KkrtNcoOtReceiver.h"
 #include "NChooseOne/KkrtNcoOtSender.h"
 
-
 #include "NChooseOne/KkrtNcoOtReceiver.h"
 #include "NChooseOne/KkrtNcoOtSender.h"
 
@@ -73,45 +72,51 @@ void PM_Test_Impl()
 	Channel& senderChannel = ep1.addChannel("chl", "chl");
 	Channel& recvChannel = ep0.addChannel("chl", "chl");
 
-	u64 numOTs = 200, numBlkP=1, numBlkT=2, blkSize=128;
-	u64 numP = numBlkP*blkSize, numT = numBlkT*blkSize;
-
-	//1-o-o-3
-	//   text
-	//  --------
-	//  --------
-	std::vector<std::array<block, 3>> text(numBlkT);
-	
-
-
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
+	u64 numBlkP=3, numBlkT=5, blkSize=128;
+	u64 numP = numBlkP*blkSize, numT = numBlkT*blkSize, numOTs= numP;
+	std::vector<block>text(numBlkT);
+	for (u64 i = 0; i < text.size(); i++)
+		text[i]= prng.get<block>();
+
+		
+	//1-o-o-3
+	//   2pattern x  text
+	// #01---------------r => if p[0]=1 gets r, p[0]=1 does r+1
+	// #*---------------r+text
+	// #01---------------
+	// #1---------------
+	// #*---------------
+
+	std::vector<std::vector<block>> matrix(2*numBlkP);
+	
+	for (u64 i = 0; i < matrix.size(); i+=2)
+	{
+		matrix[i].resize(numBlkT);
+		for (u64 j = 0; j < text.size(); j++)
+			matrix[i][j] = prng.get<block>();
+
+		matrix[i+1].resize(numBlkT);
+		for (u64 j = 0; j < text.size(); j++)
+			matrix[i+1][j] = matrix[i][j]^text[j];
+	}
+
 	PRNG prng0(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 	PRNG prng1(_mm_set_epi32(4253233465, 334565, 0, 235));
 
 	//t1, t1+s1
-	std::vector<block> recvMsg1(numOTs), baseRecv1(128);
-	std::vector<std::array<block, 2>> sendMsg1(numOTs), baseSend1(128);
-	BitVector choices1(numOTs), baseChoice1(128);
-	choices1.randomize(prng0);
-	baseChoice1.randomize(prng0);
-	
-	//t2, t2+s2
-	std::vector<block> recvMsg2(numOTs), baseRecv2(128);
-	std::vector<std::array<block, 2>> sendMsg2(numOTs), baseSend2(128);
-	BitVector choices2(numOTs), baseChoice2(128);
-	choices2.randomize(prng0);
-	baseChoice2.randomize(prng0);
-
-	std::array<BitVector, 2> choices;
-	choices[0] = choices1;
-	choices[1] = choices2;
-
-	//t1+t2, t1+t2+s1, t1+t2+s2, t1+t2+s1+s2
-	std::vector<std::array<block, 4>> sendMsg(numOTs);
-	std::vector<block> recvMsg(numOTs); //t1+t2
+	std::vector<block> recvMsg(numOTs), baseRecv(128);
+	std::vector<std::array<block, 2>> sendMsg(numOTs), baseSend(128);
+	BitVector choices(numOTs), baseChoice(128);
+	choices.randomize(prng0);
+	baseChoice.randomize(prng0);	
 		
 	IknpOtExtSender sender;
 	IknpOtExtReceiver recv;
+
+
+	std::vector<PRNG> genRecv(numOTs);
+	std::vector<std::array<PRNG, 2>> genSend(numOTs);
 			
 
 	std::thread thrd = std::thread([&]() {
@@ -119,47 +124,56 @@ void PM_Test_Impl()
 		
 //Offline
 		NaorPinkas base;
-		base.send(baseSend1, prng, senderChannel, 2);
-		base.send(baseSend2, prng, senderChannel, 2);
-
-		recv.setBaseOts(baseSend1);
-		recv.receive(choices1, recvMsg1, prng, recvChannel);
-		recv.setBaseOts(baseSend2);
-		recv.receive(choices2, recvMsg2, prng, recvChannel);
-
-		for (u64 i = 0; i < numOTs; i++)
+		base.send(baseSend, prng, senderChannel, 2);
+		recv.setBaseOts(baseSend);
+		recv.receive(choices, recvMsg, prng, recvChannel);
+		for (u64 i = 0; i < genRecv.size(); i++)
 		{
-			recvMsg[i] = recvMsg1[i] ^ recvMsg2[i];
+			genRecv[i].SetSeed(recvMsg[i]);
 		}
 
-	
-
-
-
 	});
+	
 
 	NaorPinkas base;
-	base.receive(baseChoice1, baseRecv1, prng, recvChannel, 1);
-	base.receive(baseChoice2, baseRecv2, prng, recvChannel, 1);
-
-	sender.setBaseOts(baseRecv1, baseChoice1);
-	sender.send(sendMsg1, prng1, senderChannel);
-
-	sender.setBaseOts(baseRecv2, baseChoice2);
-	sender.send(sendMsg2, prng1, senderChannel);
-	
-	
-	for (u64 i = 0; i < numOTs; i++)
+	base.receive(baseChoice, baseRecv, prng, recvChannel, 1);
+	sender.setBaseOts(baseRecv, baseChoice);
+	sender.send(sendMsg, prng1, senderChannel);
+	for (u64 i = 0; i < genSend.size(); i++)
 	{
-		sendMsg[i][0] = sendMsg1[i][0] ^ sendMsg2[i][0];
-		sendMsg[i][1] = sendMsg1[i][1] ^ sendMsg2[i][0];
-		sendMsg[i][2] = sendMsg1[i][0] ^ sendMsg2[i][1];
-		sendMsg[i][3] = sendMsg1[i][1] ^ sendMsg2[i][1];
+		genSend[i][0].SetSeed(sendMsg[i][0]);
+		genSend[i][1].SetSeed(sendMsg[i][1]);
 	}
+
 
 	thrd.join();
 
-	std::cout << sendMsg[199][0] << std::endl;
+
+
+	std::vector<std::vector<block>> matrixOffline(2 * numBlkP);
+
+	for (u64 i = 0; i < matrixOffline.size(); i += 2)
+	{
+		matrixOffline[i].resize(numBlkT);
+		matrixOffline[i+1].resize(numBlkT);
+		for (u64 j = 0; j < matrixOffline[i].size(); j++)
+		{
+			matrixOffline[i][j] = genSend[i][0].get<block>();
+			matrixOffline[i+1][j] = genSend[i][1].get<block>();
+		}
+	}
+
+	std::vector<block>partternOffline(numBlkT);
+	for (u64 i = 0; i < partternOffline.size(); i ++)
+	{
+		partternOffline[i] = genRecv[i].get<block>();
+	}
+
+	std::cout << matrixOffline[2][0] << std::endl;
+	std::cout << matrixOffline[2][1] << std::endl;
+	std::cout << partternOffline[2] << std::endl;
+
+	/*std::cout << sendMsg[199][0] << std::endl;
 	std::cout << sendMsg[199][1] << std::endl;
 	std::cout << sendMsg[199][2] << std::endl;
 	std::cout << sendMsg[199][3] << std::endl;
@@ -168,11 +182,15 @@ void PM_Test_Impl()
 
 	std::cout << choices[0][199] << std::endl;
 	std::cout << choices[1][199] << std::endl;
+*/
+	block a = sendMsg[100][0] ^ sendMsg[100][1];
+	block b = sendMsg[150][0] ^ sendMsg[150][1];
+	std::cout << a << std::endl;
+	std::cout << b << std::endl;
 
+	block delta = *(block*)baseChoice.data();
 
-
-
-
+	std::cout << delta << std::endl;
 
 #if 0
 	auto& params = k233;
@@ -194,7 +212,7 @@ void PM_Test_Impl()
 
 	pA = g*alpha;
 
-	u8 choice = choices1[0];
+	u8 choice = choices[0];
 
 	if (!choice)
 		pB = pA + g*beta;
@@ -282,7 +300,7 @@ void IknpOtExt4_Test_Impl()
 	//{
 	//    std::cout << sender.GetMessage(i, 0) << " " << sender.GetMessage(i, 1) << "\n" << recv.GetMessage(1) << "  " << recv.mChoiceBits[i] << std::endl;
 	//}
-//	OT_100Receive_Test(choices1, recvMsg1, sendMsg1);
+//	OT_100Receive_Test(choices, recvMsg, sendMsg);
 
 
 

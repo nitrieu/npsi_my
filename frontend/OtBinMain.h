@@ -22,3 +22,4 @@ void OPPRFn_Aug_EmptrySet_Test_Impl();
 void OPPRFnt_EmptrySet_Test_Impl();
 void getBinSizeDistribution(u64 setSize, std::vector<block> set, u64 psiSecParam);
 //void OPPRFn_EmptrySet_Test();
+void Transpose_Test();

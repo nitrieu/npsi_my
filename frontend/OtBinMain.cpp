@@ -7,7 +7,7 @@
 
 #include <fstream>
 using namespace osuCrypto;
-
+#include "Tools/Tools.h"
 #include "Common/Defines.h"
 #include "NChooseOne/KkrtNcoOtReceiver.h"
 #include "NChooseOne/KkrtNcoOtSender.h"
@@ -3053,6 +3053,68 @@ void OPPRFn_Aug_EmptrySet_Test_Impl()
 	for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
 		pThrds[pIdx].join();
 
+
+}
+
+
+void Transpose_Test()
+{
+
+	u64 numOTs = 200, numBlkP = 1 << 4, numBlkT = 1 << 12, blkSize = 128;
+	u64 numP = numBlkP*blkSize, numT = numBlkT*blkSize;
+	Timer timer;
+
+	{
+		
+		
+
+		std::array<block, 128> data;
+		memset((u8*)data.data(), 0, sizeof(data));
+
+		data[0] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[1] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[2] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[3] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[4] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[5] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[6] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);
+		data[7] = _mm_set_epi64x(0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF);		
+
+		auto start = timer.setTimePoint("start");
+		for (u64 i = 0; i < numBlkT; i++)
+			for (u64 j = 0; j < numBlkP; j++)
+		{
+			sse_transpose128(data);
+		}
+		auto end = timer.setTimePoint("end");
+
+		auto total = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+		std::cout << "total:  " << total << " ms\n";
+	}
+
+	{
+		PRNG prng(ZeroBlock);
+
+		std::array<std::array<block, 8>, 128> data;
+
+		prng.get((u8*)data.data(), sizeof(block) * 8 * 128);
+
+
+		std::array<std::array<block, 8>, 128> data2 = data;
+
+		auto start = timer.setTimePoint("start");
+		for (u64 i = 0; i < numBlkT/8; i++)
+			for (u64 j = 0; j < numBlkP; j++)
+				sse_transpose128x1024(data);
+
+		auto end = timer.setTimePoint("end");
+
+		auto total = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+		std::cout << "total:  " << total << " ms\n";
+
+	}
 
 }
 

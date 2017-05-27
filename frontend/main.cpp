@@ -30,7 +30,8 @@ int main(int argc, char** argv)
 	//return 0;
 	//OPPRF2_EmptrySet_Test_Main();
 	//OPPRFn_EmptrySet_Test_Main();
-	OPPRF3_EmptrySet_Test_Main();
+	Transpose_Test();
+	//OPPRF3_EmptrySet_Test_Main();
 	return 0;
 //	OPPRFnt_EmptrySet_Test_Main();
 	//OPPRFnt_EmptrySet_Test_Main();
