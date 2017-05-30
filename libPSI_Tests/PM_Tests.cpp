@@ -73,12 +73,13 @@ void PM_Test_Impl()
 	Channel& recvChannel = ep0.addChannel("chl", "chl");
 
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
-	u64 numBlkP=3, numBlkT=5, blkSize=128;
+	u64 numBlkP=8, numBlkT=10, blkSize=128;
 	u64 numP = numBlkP*blkSize, numT = numBlkT*blkSize, numOTs= numP;
 	std::vector<block>text(numBlkT);
 	for (u64 i = 0; i < text.size(); i++)
 		text[i]= prng.get<block>();
 
+	BitVector parttern(numP);
 		
 	//1-o-o-3
 	//   2pattern x  text
@@ -88,7 +89,7 @@ void PM_Test_Impl()
 	// #1---------------
 	// #*---------------
 
-	std::vector<std::vector<block>> matrix(2*numBlkP);
+	/*std::vector<std::vector<block>> matrix(2* numP);
 	
 	for (u64 i = 0; i < matrix.size(); i+=2)
 	{
@@ -99,7 +100,7 @@ void PM_Test_Impl()
 		matrix[i+1].resize(numBlkT);
 		for (u64 j = 0; j < text.size(); j++)
 			matrix[i+1][j] = matrix[i][j]^text[j];
-	}
+	}*/
 
 	PRNG prng0(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 	PRNG prng1(_mm_set_epi32(4253233465, 334565, 0, 235));
@@ -114,13 +115,18 @@ void PM_Test_Impl()
 	IknpOtExtSender sender;
 	IknpOtExtReceiver recv;
 
+	std::vector<std::vector<block>> matrixOffline(2 * numBlkP);
+	std::vector<std::vector<block>>partternOffline(numBlkP);
+
+	std::vector<std::vector<block>> matrixOnline(2 * numBlkP);
+	std::vector<std::vector<block>>partternOnline(numBlkP);
 
 	std::vector<PRNG> genRecv(numOTs);
 	std::vector<std::array<PRNG, 2>> genSend(numOTs);
 			
 
 	std::thread thrd = std::thread([&]() {
-		Log::setThreadName("receiver"); 
+		Log::setThreadName("pattern"); 
 		
 //Offline
 		NaorPinkas base;
@@ -130,6 +136,13 @@ void PM_Test_Impl()
 		for (u64 i = 0; i < genRecv.size(); i++)
 		{
 			genRecv[i].SetSeed(recvMsg[i]);
+		}
+
+		for (u64 i = 0; i < partternOffline.size(); i++)
+		{
+			partternOffline[i].resize(numBlkT);
+			for (u64 j = 0; j < partternOffline[i].size(); j++)
+				partternOffline[i][j] = genRecv[i].get<block>();
 		}
 
 	});
@@ -145,29 +158,72 @@ void PM_Test_Impl()
 		genSend[i][1].SetSeed(sendMsg[i][1]);
 	}
 
+	for (u64 i = 0; i < matrixOffline.size(); i += 2)
+	{
+		matrixOffline[i].resize(numBlkT);
+		matrixOffline[i + 1].resize(numBlkT);
+		for (u64 j = 0; j < matrixOffline[i].size(); j++)
+		{
+			matrixOffline[i][j] = genSend[i][0].get<block>();
+			matrixOffline[i + 1][j] = genSend[i][1].get<block>();
+		}
+	}
 
+
+	thrd.join();
+
+	//online => send correction vals 1024x128
+	u64 step = 1024;
+
+	
+	
+	std::thread thrd = std::thread([&]() {
+		Log::setThreadName("pattern");
+		
+		for (u64 k = 0; k < numBlkT; k++)
+		{
+			for (u64 i = 0; i < numP; i += step)
+			{
+				uPtr<Buff> recvMaskBuff(new Buff);
+				recvMaskBuff->resize(step * sizeof(block));
+				auto maskBFView = recvMaskBuff->getArrayView<block>();
+				for (u64 j = 0; j < maskBFView.size(); j++)
+				{
+				//	if (parttern[i])
+				}
+			}
+		}
+
+	});
+
+	//semd 1024x128 each time. We have numPxnumBlkT in total
+	//send row by row
+	
+	for (u64 k = 0; k < numBlkT; k++) 
+	{
+		for (u64 i = 0; i < numP; i += step)
+		{
+			uPtr<Buff> sendMaskBuff(new Buff);
+			sendMaskBuff->resize(step * sizeof(block));
+			auto maskBFView = sendMaskBuff->getArrayView<block>();
+			for (u64 j = 0; j < maskBFView.size(); j++)
+			{
+				//compute H(q)+H(q+s)+m
+				maskBFView[i + j] = matrixOffline[i + j][k] ^ matrixOffline[i + j + 1][k] ^ text[k];
+			}
+			senderChannel.asyncSend(std::move(sendMaskBuff));
+		}
+	}
 	thrd.join();
 
 
 
-	std::vector<std::vector<block>> matrixOffline(2 * numBlkP);
+	
 
-	for (u64 i = 0; i < matrixOffline.size(); i += 2)
-	{
-		matrixOffline[i].resize(numBlkT);
-		matrixOffline[i+1].resize(numBlkT);
-		for (u64 j = 0; j < matrixOffline[i].size(); j++)
-		{
-			matrixOffline[i][j] = genSend[i][0].get<block>();
-			matrixOffline[i+1][j] = genSend[i][1].get<block>();
-		}
-	}
+	
 
-	std::vector<block>partternOffline(numBlkT);
-	for (u64 i = 0; i < partternOffline.size(); i ++)
-	{
-		partternOffline[i] = genRecv[i].get<block>();
-	}
+	
+	
 
 	std::cout << matrixOffline[2][0] << std::endl;
 	std::cout << matrixOffline[2][1] << std::endl;
