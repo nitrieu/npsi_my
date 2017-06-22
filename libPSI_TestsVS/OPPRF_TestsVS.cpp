@@ -5,7 +5,6 @@
 #include "EQ_Tests.h"
 //#include "nPSI.h"
 #include "Common.h"
-#include "ShamirSSScheme_Tests.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -68,11 +67,6 @@ namespace WeGarbleTests
 			InitDebugPrinting();
 			OPPRFn_EmptrySet_Test_Impl();
 
-		}
-		TEST_METHOD(ShamirSSScheme)
-		{
-			InitDebugPrinting();
-			ShamirSSScheme_Test();
 		}
 
 		TEST_METHOD(OPPRFn_Aug_EmptrySet_Test)

@@ -177,7 +177,7 @@ void PM_Test_Impl()
 
 	
 	
-	std::thread thrd = std::thread([&]() {
+	 thrd = std::thread([&]() {
 		Log::setThreadName("pattern");
 		
 		for (u64 k = 0; k < numBlkT; k++)
@@ -227,7 +227,7 @@ void PM_Test_Impl()
 
 	std::cout << matrixOffline[2][0] << std::endl;
 	std::cout << matrixOffline[2][1] << std::endl;
-	std::cout << partternOffline[2] << std::endl;
+	//std::cout << partternOffline[2] << std::endl;
 
 	/*std::cout << sendMsg[199][0] << std::endl;
 	std::cout << sendMsg[199][1] << std::endl;

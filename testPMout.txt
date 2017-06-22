@@ -1,6 +1,40 @@
-252e73864fa7f9eda7d94c3f1828b653
-4f40b35228f8739a51b7b754afdc6e51
-252e73864fa7f9eda7d94c3f1828b653
-3d61cbf6d12350be0b4ca5c200e9a491
-9639e97079d82561fe20748074e3fa88
-cf7cb2b738b53c11a9ed20c1bb1884fe
+------1------
+14fcad76c3ac3df53905a1a031228699
+------4------
+09325f2d53331b40dcff33b15b9b6e5c
+70587941a11faba3049ecfe0102c628a
+s[4]-dataSent(bytes)517055----------
+s[4]-dataSent(bytes)517055----------
+1s-5409b7eccd4d906124599f614639a4947
+1s-42f0c52828161ca457919b5079afcbcfb
+1s-135904d3f5a99175b17ff0fe7b541ab4b6
+s[4]-dataSent(bytes)517055----------
+s[4]-dataSent(bytes)517055----------
+
+Client Idx: 0
+setSize: 256
+offlineTime:  6486 ms
+hashingTime:  368 ms
+getOPRFTime:  497 ms
+ss2DirTime:  1453 ms
+intersection:  0 ms
+onlineTime:  2318 ms
+Total time: 8.804 s
+Total Comm: Send:0.0156841 MB------------------
+4r-50227ebf3814d148f1a99f614639a4947
+4r-4e68d0219201118c57a19b5079afcbcfb
+4r-13cb25711a19152acd09f0fe7b541ab4b6
+------------
+mIntersection.size(): 256
+
+Leader Idx: 4
+#Output Intersection: 256
+#Expected Intersection: 256
+setSize: 256
+offlineTime:  7757 ms
+hashingTime:  70 ms
+getOPRFTime:  18 ms
+ss2DirTime:  1592 ms
+intersection:  2 ms
+onlineTime:  1682 ms
+Total time: 9.439 s

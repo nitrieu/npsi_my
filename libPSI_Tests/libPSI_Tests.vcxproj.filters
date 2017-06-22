@@ -33,9 +33,6 @@
     <ClCompile Include="nPSI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShamirSSScheme_Tests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EQ_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
