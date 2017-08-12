@@ -1343,10 +1343,18 @@ namespace osuCrypto
 
 		gTimer.setTimePoint("online.send.spaw");
 
+	
+		std::vector<block> hashs1(bins.mXsets.size());
+		std::vector<block> hashs2(bins.mXsets.size());
+		mBFHasher[0].ecbEncBlocks(bins.mXsets.data(), bins.mXsets.size(), (block*)hashs1.data());
+		mBFHasher[1].ecbEncBlocks(bins.mXsets.data(), bins.mXsets.size(), (block*)hashs2.data());
+
+
 		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
 			auto seed = mPrng.get<block>();
 			thrds[tIdx] = std::thread([&, tIdx, seed]() {
+
 
 				PRNG prng(seed);
 
@@ -1365,6 +1373,8 @@ namespace osuCrypto
 				idxEnd = (tIdx + 1) * mN / thrds.size();
 
 
+
+
 				if (tIdx == 0) gTimer.setTimePoint("online.send.masks.init.step");
 
 				for (u64 inputIdx = idxStart; inputIdx < idxEnd;)
@@ -1379,11 +1389,26 @@ namespace osuCrypto
 						std::set<u64> idxs;
 
 
+						u64& idx1 = *(u64*)&hashs1[inputIdx];
+						idx1 %= mBfSize;
+						idxs.emplace(idx1);
+						//std::cout << "idx1" << idx1 << "\n";
+
+						u64& idx2 = *(u64*)&hashs2[inputIdx];
+						idx2 %= mBfSize;
+						idxs.emplace(idx2);
+						//std::cout << "idx2" << idx2 << "\n";
+
+					
+
 						//normal BF presented by one bit
-						for (u64 BFhashIdx = 0; BFhashIdx < mBFHasher.size(); ++BFhashIdx)
+						for (u64 BFhashIdx = 2; BFhashIdx < mBFHasher.size(); ++BFhashIdx)
 						{
-							block hashOut = mBFHasher[BFhashIdx].ecbEncBlock(bins.mXsets[inputIdx]);
+							/*block hashOut = mBFHasher[BFhashIdx].ecbEncBlock(bins.mXsets[inputIdx]);
 							u64& idx = *(u64*)&hashOut;
+							idx %= mBfSize;*/
+
+							u64 idx = idx1 + BFhashIdx * idx2;
 							idx %= mBfSize;
 							idxs.emplace(idx);
 						}

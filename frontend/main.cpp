@@ -30,9 +30,9 @@ int main(int argc, char** argv)
 	//return 0;
 	//OPPRF2_EmptrySet_Test_Main();
 	//OPPRFn_EmptrySet_Test_Main();
-	Transpose_Test();
+	//Transpose_Test();
 	//OPPRF3_EmptrySet_Test_Main();
-	return 0;
+	//return 0;
 //	OPPRFnt_EmptrySet_Test_Main();
 	//OPPRFnt_EmptrySet_Test_Main();
 	//OPPRFn_Aug_EmptrySet_Test_Impl();
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
 
 	std::vector<block> mSet;
 
-	u64 setSize = 1 << 12, psiSecParam = 40, bitSize = 128;
+	u64 setSize = 1 << 20, psiSecParam = 40, bitSize = 128;
 
 	u64 nParties, tParties, opt_basedOPPRF;
 	u64 roundOPPRF;

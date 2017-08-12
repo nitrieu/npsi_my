@@ -4,23 +4,23 @@
 09325f2d53331b40dcff33b15b9b6e5c
 70587941a11faba3049ecfe0102c628a
 s[4]-dataSent(bytes)517055----------
+
+Client Idx: 0
+setSize: 256
+offlineTime:  3967 ms
+hashingTime:  460 ms
+getOPRFTime:  497 ms
+ss2DirTime:  1744 ms
+intersection:  0 ms
+onlineTime:  2701 ms
+Total time: 6.668 s
+Total Comm: Send:0.508786 MB------------------
 s[4]-dataSent(bytes)517055----------
 1s-5409b7eccd4d906124599f614639a4947
 1s-42f0c52828161ca457919b5079afcbcfb
 1s-135904d3f5a99175b17ff0fe7b541ab4b6
 s[4]-dataSent(bytes)517055----------
 s[4]-dataSent(bytes)517055----------
-
-Client Idx: 0
-setSize: 256
-offlineTime:  6486 ms
-hashingTime:  368 ms
-getOPRFTime:  497 ms
-ss2DirTime:  1453 ms
-intersection:  0 ms
-onlineTime:  2318 ms
-Total time: 8.804 s
-Total Comm: Send:0.0156841 MB------------------
 4r-50227ebf3814d148f1a99f614639a4947
 4r-4e68d0219201118c57a19b5079afcbcfb
 4r-13cb25711a19152acd09f0fe7b541ab4b6
@@ -31,10 +31,10 @@ Leader Idx: 4
 #Output Intersection: 256
 #Expected Intersection: 256
 setSize: 256
-offlineTime:  7757 ms
-hashingTime:  70 ms
-getOPRFTime:  18 ms
-ss2DirTime:  1592 ms
-intersection:  2 ms
-onlineTime:  1682 ms
-Total time: 9.439 s
+offlineTime:  4804 ms
+hashingTime:  93 ms
+getOPRFTime:  29 ms
+ss2DirTime:  2127 ms
+intersection:  26 ms
+onlineTime:  2275 ms
+Total time: 7.079 s

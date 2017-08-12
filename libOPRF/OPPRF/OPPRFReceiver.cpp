@@ -1185,6 +1185,14 @@ namespace osuCrypto
 		//std::cout << "\nr[" << IdxP << "]-maskBFView[1][3]" << maskBFView[1][3] << "\n";
 
 #if 1
+		std::array<std::vector<block>, 2> bfHashs;
+		for (u32 i = 0; i < 2; i++)
+		{
+			bfHashs[i].resize(bins.mXsets.size());
+			mBFHasher[i].ecbEncBlocks(bins.mXsets.data(), bins.mXsets.size(), (block*)bfHashs[i].data());
+
+		}
+		
 
 		for (u64 tIdx = 0; tIdx < thrds.size(); ++tIdx)
 		{
@@ -1230,12 +1238,29 @@ namespace osuCrypto
 
 								block blkY = ZeroBlock;
 
+								
+								std::vector<u64> idxs(2);
+								u64 idx;
 
 								for (u64 hashIdx = 0; hashIdx < mBFHasher.size(); ++hashIdx)
 								{
-									block hashOut = mBFHasher[hashIdx].ecbEncBlock(bins.mXsets[inputIdx]);
+									if (hashIdx < 2)
+									{
+										idxs[hashIdx] = *(u64*)&bfHashs[hashIdx][inputIdx];
+										idxs[hashIdx] %= mBfSize;
+										idx = idxs[hashIdx];
+									}
+									else
+									{
+										idx = idxs[0] + hashIdx*idxs[1];
+										idx %= mBfSize;
+									}
+
+									/*block hashOut = mBFHasher[hashIdx].ecbEncBlock(bins.mXsets[inputIdx]);
 									u64& idx = *(u64*)&hashOut;
-									idx %= mBfSize;
+									idx %= mBfSize;*/
+
+
 									auto theirBFMask = ZeroBlock;
 									memcpy(&theirBFMask, maskBFView[hIdx*mBfSize + idx].data(), bins.mMaskSize);
 									/*if(hIdx==1&&idx==3)

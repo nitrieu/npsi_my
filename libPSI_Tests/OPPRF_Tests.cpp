@@ -3974,6 +3974,26 @@ void GBF_Test_Impl()
 		mSetY[i] = prng.get<block>();
 	}
 
+
+	std::vector<block> hashs1(setSize);
+	std::vector<block> hashs2(setSize);
+	mAesFixedKey.ecbEncBlocks(mSetX.data(), mSetX.size(), (block*)hashs1.data());
+	mAesFixedKey.ecbEncBlocks(mSetX.data(), mSetX.size(), (block*)hashs2.data());
+
+
+
+
+	u64& idx1 = *(u64*)&hashs1[0];
+	idx1 %= 100;
+	std::cout <<"idx1" << idx1 << "\n";
+
+	u64& idx2 = *(u64*)&hashs2[0];
+	idx2 %= 100;
+	std::cout << "idx2" << idx2 << "\n";
+
+	u64 idx = idx1 + 3 * idx2;
+	idx %= 100;
+	std::cout << "idx" << idx << "\n";
 	//create hash
 	
 	std::vector<AES> mBFHasher(numHashFunctions);

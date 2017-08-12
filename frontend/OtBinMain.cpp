@@ -29,7 +29,7 @@ std::vector<block> sendSet;
 std::vector<block> mSet;
 u64 nParties(3);
 
-u64 opt = 0;
+u64 opt = 3;
 
 bool isNTLThreadSafe = false;
 
