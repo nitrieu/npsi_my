@@ -25,10 +25,10 @@ namespace WeGarbleTests
             InitDebugPrinting();
 			OPPRF_EmptrySet_Test_Impl();
         }*/
-		/*TEST_METHOD(nOPPRF_EmptrySet_Test)
+		/*TEST_METHOD(OPPRF2_EmptrySet_Tes)
 		{
 			InitDebugPrinting();
-			nOPPRF_EmptrySet_Test_Impl();
+			OPPRF2_EmptrySet_Test_Impl()();
 		}*/
 
 			TEST_METHOD(EQ_EmptrySet_Test)
@@ -156,7 +156,7 @@ namespace WeGarbleTests
 			InitDebugPrinting();
 			GBF_Test_Impl();
 		}
-		TEST_METHOD(OPPRF2_EmptrySet_Test)
+		TEST_METHOD(OPRF2_EmptrySet_Test)
 		{
 			InitDebugPrinting();
 			OPPRF2_EmptrySet_Test_Impl();

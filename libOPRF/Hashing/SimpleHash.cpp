@@ -22,7 +22,7 @@ namespace osuCrypto
 	SimpleParams k2n08s40SimpleParams
 	{ { 1.17,0.15 },{ 3,2 },{ 27,63 },{ 5,6 } };
 
-	// not sure if this needs a stash of 40, but should be safe enough.
+	// should be safe enough.
 	SimpleParams k2n07s40SimpleParams
 	{ { 1.5,0.17 },{ 3,2 },{ 27,64 },{ 5,6 } };
 

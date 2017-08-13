@@ -81,12 +81,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CLP.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OtBinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CLP.h" />
     <ClInclude Include="OtBinMain.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "Network/BtChannel.h"
 #include "Network/BtEndpoint.h"
@@ -11,7 +10,6 @@ using namespace osuCrypto;
 
 #include <numeric>
 #include "Common/Log.h"
-//int miraclTestMain();
 
 #include "cuckoo/cuckooTests.h"
 
@@ -37,7 +35,8 @@ int main(int argc, char** argv)
 	//OPPRFnt_EmptrySet_Test_Main();
 	//OPPRFn_Aug_EmptrySet_Test_Impl();
 	//OPPRFnt_EmptrySet_Test_Impl();
-//	return 0;
+	OPPRF2_EmptrySet_Test_Main();
+	return 0;
 
 	u64 trials = 1;
 

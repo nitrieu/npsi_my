@@ -557,57 +557,7 @@ void Channel_Test_Impl() {
 
 	ios.stop();
 }
-void OPPRF2_EmptrySet_Test_Impl_draft()
-{
-	u64 setSize = 1 << 5, psiSecParam = 40, bitSize = 128, numParties = 2;
-	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 
-	std::vector<block> sendSet(setSize), recvSet(setSize);
-	std::vector<block> sendPayLoads(setSize), recvPayLoads(setSize);
-
-	for (u64 i = 0; i < setSize; ++i)
-	{
-		sendSet[i] = prng.get<block>();
-		sendPayLoads[i] = prng.get<block>();
-		recvSet[i] = prng.get<block>();
-		recvSet[i] = sendSet[i];
-	}
-	for (u64 i = 1; i < 3; ++i)
-	{
-		recvSet[i] = sendSet[i];
-	}
-
-	std::string name("psi");
-
-	BtIOService ios(0);
-	BtEndpoint ep0(ios, "localhost", 1212, true, name);
-	BtEndpoint ep1(ios, "localhost", 1212, false, name);
-
-
-	std::vector<Channel*> recvChl{ &ep1.addChannel(name, name) };
-	std::vector<Channel*> sendChl{ &ep0.addChannel(name, name) };
-
-	KkrtNcoOtReceiver otRecv0, otRecv1;
-	KkrtNcoOtSender otSend0, otSend1;
-
-
-
-	OPPRFSender send;
-	OPPRFReceiver recv;
-	/*   std::thread thrd([&]() {
-	  
-	   });*/
-  
-
-
-
-	sendChl[0]->close();
-	recvChl[0]->close();
-
-	ep0.stop();
-	ep1.stop();
-	ios.stop();
-}
 void OPPRF_EmptrySet_Test_Impl()
 {
 	u64 setSize = 1 << 5, psiSecParam = 40, bitSize = 128, numParties = 3;
@@ -1544,6 +1494,7 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 
 	PRNG prng1(_mm_set_epi32(4253465, 3434565, 234435, myIdx)); //for test
 	set[0] = prng1.get<block>();;
+	set[1] = prng1.get<block>();;
 
 	std::vector<block> sendPayLoads, recvPayLoads;
 	if (myIdx == 1)
@@ -1626,7 +1577,7 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 
 
 
-
+#ifdef PRINT
 	std::cout << IoStream::lock;
 	if (myIdx == 0)
 	{
@@ -1642,6 +1593,7 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 
 	std::cout << IoStream::unlock;
 
+#endif
 
 
 	//##########################
@@ -1660,14 +1612,14 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 	
 			if (myIdx == 1) {
 				//I am a sender to my next neigbour
-				send.getOPRFkeys(0, bins, chls[0], false);
+				send.getOPRFkeysCombined(0, bins, chls[0], false);
 			}
 			else if (myIdx == 0) {
 				//I am a recv to my previous neigbour
-				recv.getOPRFkeys(1, bins, chls[1], false);
+				recv.getOPRFkeysCombined(1, bins, chls[1], false);
 			}
 	
-
+#ifdef PRINT
 	if (myIdx == 0)
 	{
 		//bins.mSimpleBins.print(2, true, true, false, false);
@@ -1679,7 +1631,7 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 		bins.mSimpleBins.print(0, true, true, false, false);
 		//bins.mCuckooBins.print(0, true, true, false);
 	}
-
+#endif
 
 
 	//##########################
@@ -1688,58 +1640,18 @@ void party2(u64 myIdx, u64 setSize, std::vector<block>& mSet)
 
 	if (myIdx == 0)
 	{
-			recv.recvSS(1, bins, recvPayLoads, chls[1]);
+			recv.recvPlain(1, bins,  chls[1]);
 	}
 	else if (myIdx == 1)
 	{
-		send.sendSS(0, bins, sendPayLoads, chls[0]);
+		send.sendPlain(0, bins, chls[0]);
 	}
 	
-
-	std::cout << IoStream::lock;
-	if (myIdx == 0)
-	{
-		//u64 
-		//block x0= set[bins.mCuckooBins.mBins[0].idx()];
-
-		for (int i = 0; i < 5; i++)
-		{
-
-			Log::out << myIdx << "r-" << recvPayLoads[i] << Log::endl;
-		}
-		Log::out << "------------" << Log::endl;
-	}
-	if (myIdx == 1)
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			//Log::out << recvPayLoads[i] << Log::endl;
-			Log::out << myIdx << "s-" << sendPayLoads[i] << Log::endl;
-		}
-	}
-	
-	std::cout << IoStream::unlock;
-
-#if 1
-	//##########################
-	//### online phasing - compute intersection
-	//##########################
 
 	if (myIdx == 0) {
-		std::vector<u64> mIntersection;
-		u64 maskSize = roundUpTo(psiSecParam + 2 * std::log2(setSize) - 1, 8) / 8;
-		for (u64 i = 0; i < setSize; ++i)
-		{
-			//	if (sendPayLoads[i]== recvPayLoads[i])
-		//	if (!memcmp((u8*)&sendPayLoads[i], &recvPayLoads[i], maskSize))
-		//	{
-		//		mIntersection.push_back(i);
-		//	}
-		}
-		//Log::out << "mIntersection.size(): "<<mIntersection.size() << Log::endl;
+		Log::out << "mIntersection.size(): "<< recv.mIntersection.size() << Log::endl;
 	}
 
-#endif // 0
 	for (u64 i = 0; i < nParties; ++i)
 	{
 		if (i != myIdx)

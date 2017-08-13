@@ -76,18 +76,22 @@
     <ClCompile Include="Hashing\Hints.cpp" />
     <ClCompile Include="Hashing\CuckooHash.cpp" />
     <ClCompile Include="Hashing\SimpleHash.cpp" />
-    <ClCompile Include="OPPRF\EQReceiver.cpp" />
-    <ClCompile Include="OPPRF\EQSender.cpp" />
+    <ClCompile Include="OPPRF\BfOpprfReceiver.cpp" />
+    <ClCompile Include="OPPRF\BfOpprfSender.cpp" />
     <ClCompile Include="OPPRF\binSet.cpp" />
     <ClCompile Include="OPPRF\OPPRFReceiver.cpp" />
     <ClCompile Include="OPPRF\OPPRFSender.cpp" />
+    <ClCompile Include="OPPRF\PlainOprfReceiver.cpp" />
+    <ClCompile Include="OPPRF\PlainOprfSender.cpp" />
+    <ClCompile Include="OPPRF\PolyOpprfReceiver.cpp" />
+    <ClCompile Include="OPPRF\PolyOpprfSender.cpp" />
+    <ClCompile Include="OPPRF\TableOpprfReceiver.cpp" />
+    <ClCompile Include="OPPRF\TableOpprfSender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hashing\Hints.h" />
     <ClInclude Include="Hashing\CuckooHash.h" />
     <ClInclude Include="Hashing\SimpleHash.h" />
-    <ClInclude Include="OPPRF\EQReceiver.h" />
-    <ClInclude Include="OPPRF\EQSender.h" />
     <ClInclude Include="OPPRF\binSet.h" />
     <ClInclude Include="OPPRF\OPPRFReceiver.h" />
     <ClInclude Include="OPPRF\OPPRFSender.h" />

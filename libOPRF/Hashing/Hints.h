@@ -20,6 +20,11 @@
 #include "NTL/GF2EX.h" 
 #include "NTL/GF2XFactoring.h"
 
+#define TABLEb 0 
+#define SepPOLYb 1 
+#define OnePOLYb 2
+#define BFb 3
+
 namespace osuCrypto
 {
 
