@@ -19,6 +19,8 @@ void GBF_Test_Impl();
 void OPPRF2_EmptrySet_Test_Impl();
 void OPPRFn_Aug_EmptrySet_Test_Impl();
 void Communication_Test_Impl();
+void Cache_Test_Impl();
+
 //void OPPRF2_EmptrySet_Test_Impl();
 //void OPPRF_FullSet_Test_Impl    ();
 //void OPPRF_SingltonSet_Test_Impl();

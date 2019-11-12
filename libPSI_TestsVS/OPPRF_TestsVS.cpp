@@ -162,6 +162,15 @@ namespace WeGarbleTests
 			OPPRF2_EmptrySet_Test_Impl();
 		}
 		
+		TEST_METHOD(Cache_Test_Impl_Test)
+		{
+			InitDebugPrinting();
+			Cache_Test_Impl();
+		}
+
+
+		
+
 		/*TEST_METHOD(Channel_Test)
 		{
 			InitDebugPrinting();

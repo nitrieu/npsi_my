@@ -1,40 +1,39 @@
 ------1------
 14fcad76c3ac3df53905a1a031228699
-------4------
-09325f2d53331b40dcff33b15b9b6e5c
-70587941a11faba3049ecfe0102c628a
-s[4]-dataSent(bytes)517055----------
+------2------
+c001954b1c235c6cf2610e1831d92e30
+dc93b0a399cbe2d37cbe7785a2f6dd8d
+s[2s[]-dataSent(bytes)2]-dataSent(bytes)6461064610----------
+----------
+1s-5a42d869ea8307f1eb26d356f4103d67a
+1s-4a8236caed7140734c849353fd645aa4e
+1s-13ecc9e475124e332c00000000000000s[2fec344445b4589f2
+]-dataSent(bytes)64610----------
 
-Client Idx: 0
-setSize: 256
-offlineTime:  862 ms
-hashingTime:  52 ms
-getOPRFTime:  185 ms
-ss2DirTime:  398 ms
+Client Idx: 1
+setSize: 32
+offlineTime:  802 ms
+hashingTime:  4 ms
+getOPRFTime:  108 ms
+ss2DirTime:  47 ms
 intersection:  0 ms
-onlineTime:  635 ms
-Total time: 1.497 s
-Total Comm: Send:0.508786 MB------------------
-s[4]-dataSent(bytes)517055----------
-s[4]-dataSent(bytes)517055----------
-1s-5409b7eccd4d906124599f614639a4947
-1s-42f0c52828161ca457919b5079afcbcfb
-1s-135904d3f5a99175b17ff0fe7b541ab4b6
-s[4]-dataSent(bytes)517055----------
-4r-50227ebf3814d148f1a99f614639a4947
-4r-4e68d0219201118c57a19b5079afcbcfb
-4r-13cb25711a19152acd09f0fe7b541ab4b6
+onlineTime:  159 ms
+Total time: 0.961 s
+Total Comm: Send:0.0773115 MB------------------
+2r-58d6eb7b57bc404e5bf6d356f4103d67a
+2r-426bc636e52bf410cd349353fd645aa4e
+2r-1339a3e767160b3e5b6eec344445b4589f
 ------------
-mIntersection.size(): 256
+mIntersection.size(): 32
 
-Leader Idx: 4
-#Output Intersection: 256
-#Expected Intersection: 256
-setSize: 256
-offlineTime:  1049 ms
-hashingTime:  31 ms
-getOPRFTime:  6 ms
-ss2DirTime:  484 ms
-intersection:  1 ms
-onlineTime:  522 ms
-Total time: 1.571 s
+Leader Idx: 2
+#Output Intersection: 32
+#Expected Intersection: 32
+setSize: 32
+offlineTime:  908 ms
+hashingTime:  3 ms
+getOPRFTime:  1 ms
+ss2DirTime:  52 ms
+intersection:  0 ms
+onlineTime:  56 ms
+Total time: 0.964 s
