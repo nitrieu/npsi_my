@@ -1,39 +1,52 @@
-------1------
-14fcad76c3ac3df53905a1a031228699
-------2------
-c001954b1c235c6cf2610e1831d92e30
-dc93b0a399cbe2d37cbe7785a2f6dd8d
-s[2s[]-dataSent(bytes)2]-dataSent(bytes)6461064610----------
-----------
-1s-5a42d869ea8307f1eb26d356f4103d67a
-1s-4a8236caed7140734c849353fd645aa4e
-1s-13ecc9e475124e332c00000000000000s[2fec344445b4589f2
-]-dataSent(bytes)64610----------
+s[2]-dataSent(bytes)64610----------
+s[2]-dataSent(bytes)64610----------
 
 Client Idx: 1
 setSize: 32
-offlineTime:  802 ms
-hashingTime:  4 ms
-getOPRFTime:  108 ms
-ss2DirTime:  47 ms
+offlineTime:  845 ms
+hashingTime:  6 ms
+getOPRFTime:  170 ms
+ss2DirTime:  49 ms
 intersection:  0 ms
-onlineTime:  159 ms
-Total time: 0.961 s
+onlineTime:  225 ms
+Total time: 1.07 s
 Total Comm: Send:0.0773115 MB------------------
-2r-58d6eb7b57bc404e5bf6d356f4103d67a
-2r-426bc636e52bf410cd349353fd645aa4e
-2r-1339a3e767160b3e5b6eec344445b4589f
-------------
-mIntersection.size(): 32
+s[2]-dataSent(bytes)64610----------
+
+Client Idx: 1
+setSize: 32
+offlineTime:  855 ms
+hashingTime:  4 ms
+getOPRFTime:  161 ms
+ss2DirTime:  62 ms
+intersection:  0 ms
+onlineTime:  227 ms
+Total time: 1.082 s
+Total Comm: Send:0.0773115 MB------------------
+s[2]-dataSent(bytes)64610----------
+mIntersection.size(): 1
 
 Leader Idx: 2
-#Output Intersection: 32
+#Output Intersection: 1
 #Expected Intersection: 32
 setSize: 32
-offlineTime:  908 ms
+offlineTime:  1015 ms
 hashingTime:  3 ms
 getOPRFTime:  1 ms
-ss2DirTime:  52 ms
+ss2DirTime:  65 ms
 intersection:  0 ms
-onlineTime:  56 ms
-Total time: 0.964 s
+onlineTime:  69 ms
+Total time: 1.084 s
+mIntersection.size(): 0
+
+Leader Idx: 2
+#Output Intersection: 0
+#Expected Intersection: 32
+setSize: 32
+offlineTime:  1015 ms
+hashingTime:  3 ms
+getOPRFTime:  1 ms
+ss2DirTime:  66 ms
+intersection:  0 ms
+onlineTime:  70 ms
+Total time: 1.085 s

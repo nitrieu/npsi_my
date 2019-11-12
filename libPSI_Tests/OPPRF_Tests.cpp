@@ -35,7 +35,7 @@
 #include "Tools/Tools.h"
 
 using namespace osuCrypto;
-#define PRINT
+//#define PRINT
 //#define BIN_PRINT
 
 u32 opt = 3;
@@ -980,6 +980,7 @@ void OPPRF_EmptrySet_hashing_Test_Impl()
 }
 
 std::vector<block> mSet;
+std::vector<u64> mPayload;
 u64 nParties(4);
 void testShareValue()
 {
@@ -4068,7 +4069,7 @@ void Communication_Test_Impl()
 
 
 
-void user_server(u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, std::vector<PRNG>& mSeedPrng, u64 opt, u64 nTrials)
+void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, std::vector<u64>& mPayload, std::vector<PRNG>& mSeedPrng, u64 opt, u64 nTrials)
 {
 	//opt = 1;
 
@@ -4099,12 +4100,12 @@ void user_server(u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, std::vecto
 	{
 		if (i < myIdx)
 		{
-			u32 port = 1200 + i * 100 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			u32 port = user_repeat* 1000+1200 + i * 100 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
 		{
-			u32 port = 1200 + myIdx * 100 + i;//get the same port; i=2 & pIdx=1 =>port=102
+			u32 port = user_repeat * 1000 + 1200 + myIdx * 100 + i;//get the same port; i=2 & pIdx=1 =>port=102
 			ep[i].start(ios, "localhost", port, true, name); //channel bwt i and pIdx, where i is receiver
 		}
 	}
@@ -4351,7 +4352,7 @@ void user_server(u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, std::vecto
 		std::cout << IoStream::unlock;
 #endif
 
-
+#if 1
 		//##########################
 		//### online phasing - compute intersection
 		//##########################
@@ -4382,7 +4383,7 @@ void user_server(u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, std::vecto
 		}
 		auto getIntersection = timer.setTimePoint("getIntersection");
 
-
+#endif
 
 		if (myIdx == clientdx || myIdx == leaderIdx) {
 
@@ -4587,9 +4588,11 @@ void Cache_Test_Impl()
 	u64 setSize = 1 << 5, psiSecParam = 40, bitSize = 128;
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 	mSet.resize(setSize);
+	mPayload.resize(setSize);
 	for (u64 i = 0; i < setSize; ++i)
 	{
 		mSet[i] = prng.get<block>();
+		mPayload[i] = prng.get<u64>();
 	}
 
 	nParties = 4;
@@ -4642,16 +4645,31 @@ void Cache_Test_Impl()
 	//}
 
 
-	std::vector<std::thread>  pThrds(nParties);
-	for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
+	auto routine = [&](u64 user_repeat)
 	{
-		pThrds[pIdx] = std::thread([&, pIdx]() {
-			//	Channel_party_test(pIdx);
-			user_server(pIdx, nParties-2, nParties, mSet.size(), mSet, mPRNGSeeds[pIdx], opt, 1);
+		std::vector<std::thread>  pThrds(nParties-1);
+		for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
+		{
+			pThrds[pIdx] = std::thread([&, pIdx]() {
+				//	Channel_party_test(pIdx);
+
+				user_server(user_repeat, pIdx, nParties-2, nParties-1, mSet.size(), mSet, mPayload, mPRNGSeeds[pIdx], opt, 1);
+			});
+		}
+		for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
+			pThrds[pIdx].join();
+	};
+
+	std::vector<std::thread> thrds(2);
+	for (u64 i = 0; i < thrds.size(); ++i)
+	{
+		thrds[i] = std::thread([=] {
+			routine(i);
 		});
 	}
-	for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)
-		pThrds[pIdx].join();
+
+	for (auto& thrd : thrds)
+		thrd.join();
 
 
 }
