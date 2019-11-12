@@ -35,7 +35,8 @@ int main(int argc, char** argv)
 	//OPPRFnt_EmptrySet_Test_Main();
 	//OPPRFn_Aug_EmptrySet_Test_Impl();
 	//OPPRFnt_EmptrySet_Test_Impl();
-	OPPRF2_EmptrySet_Test_Main();
+	//OPPRF2_EmptrySet_Test_Main();
+	OPPRFn_Aug_EmptrySet_Test_Impl();
 	return 0;
 
 	u64 trials = 1;

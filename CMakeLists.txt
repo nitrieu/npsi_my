@@ -12,7 +12,7 @@ set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib)
 #            Flag and #defines              #
 #############################################
 add_definitions(-DSOLUTION_DIR=\"${CMAKE_SOURCE_DIR}\")
-set(CMAKE_C_FLAGS "-ffunction-sections -Wall  -maes -msse2 -msse4.1 -mpclmul -pthread")
+set(CMAKE_C_FLAGS "-ffunction-sections -Wall  -maes -msse2 -msse4.1 -mpclmul -Wfatal-errors -pthread")
 set(CMAKE_CXX_FLAGS  "${CMAKE_C_FLAGS}  -std=c++14")
 
 # Set a default build type for single-configuration
@@ -36,7 +36,7 @@ SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
 #############################################
 
 # default location for libOTe
-set(libOTe_Dirs "${CMAKE_SOURCE_DIR}/../libOTe/")
+set(libOTe_Dirs "${CMAKE_SOURCE_DIR}/libOTe/")
 include_directories("${libOTe_Dirs}/libOTe/") 
 link_directories("${libOTe_Dirs}/lib/")
 

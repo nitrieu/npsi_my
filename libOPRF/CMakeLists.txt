@@ -26,7 +26,7 @@ if(NOT EXISTS "${NTL_LIB}")
   endif()
 else()
   include_directories(${NTL_Include_Dirs})
-  #message(" ----  NTL -----  ${NTL_Include_Dirs}")
+  message(" ----  NTL -----  ${NTL_Include_Dirs}")
 endif()
 
 

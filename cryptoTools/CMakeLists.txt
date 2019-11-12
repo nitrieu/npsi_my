@@ -58,6 +58,8 @@ find_library(
 if(NOT MIRACL_LIB)
   Message(${MIRACL_LIB})
   message(FATAL_ERROR "Failed to find miracl at " ${Miracl_Lib_Dirs})
+else()
+  message( "Found miracl at ${Miracl_Lib_Dirs}")
 endif()
 
 
@@ -69,7 +71,7 @@ find_package(Boost  COMPONENTS system thread)
 
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIR}) 
-  #message( "Found Boost at ${Boost_LIBRARIES}")
+  message( "Found Boost at ${Boost_LIBRARIES}")
 else()
    message(FATAL_ERROR "Failed to find boost at " ${Boost_Lib_Dirs} " Need system thread")
 endif()
