@@ -23,6 +23,12 @@ namespace osuCrypto
     {
     }
 
+	void binSet::init_priori(u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 k_prior, u64 statSecParam, u64 opt) {
+		mKprior = k_prior;
+		init(myIdx, nParties, mySetSize, theirSetSize, statSecParam, opt); 
+		mMaskSize = roundUpTo(mStatSecParam + 2 * std::log2(mN)+ std::log2(k_prior)*std::log2(nParties), 8) / 8; //rewrite mask to store the assocaited value
+	}
+
     void binSet::init( u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 statSecParam, u64 opt)
     {
 		mMyIdx = myIdx;

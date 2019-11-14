@@ -22,6 +22,9 @@ void usage(const char* argv0)
 }
 int main(int argc, char** argv)
 {
+	Cache_Test_Impl();
+	return 0;
+
 	//std::cout << "fffffffff\n";
 	//myCuckooTest_stash();
 	//Table_Based_Random_Test();
@@ -36,22 +39,27 @@ int main(int argc, char** argv)
 	//OPPRFn_Aug_EmptrySet_Test_Impl();
 	//OPPRFnt_EmptrySet_Test_Impl();
 	//OPPRF2_EmptrySet_Test_Main();
-	OPPRFn_Aug_EmptrySet_Test_Impl();
-	return 0;
+	//OPPRFn_Aug_EmptrySet_Test_Impl();
+	//return 0;
 
 	u64 trials = 1;
 
 	std::vector<block> mSet;
-
+	std::vector<u64> mPayload;
+	
 	u64 setSize = 1 << 20, psiSecParam = 40, bitSize = 128;
 
 	u64 nParties, tParties, opt_basedOPPRF;
 	u64 roundOPPRF;
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 	mSet.resize(setSize);
+	mPayload.resize(setSize);
 	for (u64 i = 0; i < setSize; ++i)
+	{
 		mSet[i] = prng.get<block>();
+		mPayload[i] = prng.get<u64>();
 
+	}
 
 	//getBinSizeDistribution(setSize, mSet, psiSecParam);
 	//return 0;
@@ -90,7 +98,24 @@ int main(int argc, char** argv)
 	
 	std::cout << "pIdx: " << pIdx << "\t";
 	std::cout << "nParties: " << nParties << "\n";
-	aug_party(pIdx, nParties, mSet.size(), mSet, mPRNGSeeds[pIdx], opt_basedOPPRF, 1);
+
+	// First phase
+	auto routine = [&](u64 user_repeat)
+	{
+		user_server(user_repeat, pIdx, nParties - 2, nParties - 1, mSet.size(), 1 << 8, mSet, mPayload, mPRNGSeeds[pIdx], opt_basedOPPRF, 1);
+	};
+
+	std::vector<std::thread> thrds(2);
+	for (u64 i = 0; i < thrds.size(); ++i)
+	{
+		thrds[i] = std::thread([=] {
+			routine(i);
+		});
+	}
+
+	for (auto& thrd : thrds)
+		thrd.join();
+
 	return 0;
 #endif
 

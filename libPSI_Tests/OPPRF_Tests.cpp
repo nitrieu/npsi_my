@@ -4069,7 +4069,7 @@ void Communication_Test_Impl()
 
 
 
-void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, std::vector<block>& mSet, std::vector<u64>& mPayload, std::vector<PRNG>& mSeedPrng, u64 opt, u64 nTrials)
+void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 setSize, u64 k_prior, std::vector<block>& mSet, std::vector<u64>& mPayload, std::vector<PRNG>& mSeedPrng, u64 opt, u64 nTrials)
 {
 	//opt = 1;
 
@@ -4100,7 +4100,7 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 	{
 		if (i < myIdx)
 		{
-			u32 port = user_repeat* 1000+1200 + i * 100 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
+			u32 port = user_repeat * 1000 + 1200 + i * 100 + myIdx;//get the same port; i=1 & pIdx=2 =>port=102
 			ep[i].start(ios, "localhost", port, false, name); //channel bwt i and pIdx, where i is sender
 		}
 		else if (i > myIdx)
@@ -4194,7 +4194,7 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 
 		}
 
-		bins.init(myIdx, nParties, setSize, setSize, psiSecParam, opt);
+		bins.init_priori(myIdx, nParties, setSize, setSize, k_prior, psiSecParam, opt);
 		u64 otCountSend = bins.mSimpleBins.mBins.size();
 		u64 otCountRecv = bins.mCuckooBins.mBins.size();
 
@@ -4352,7 +4352,7 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 		std::cout << IoStream::unlock;
 #endif
 
-#if 1
+#if 0
 		//##########################
 		//### online phasing - compute intersection
 		//##########################
@@ -4396,17 +4396,17 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 				std::cout << "\nLeader Idx: " << myIdx << "\n";
 			}
 
-			if (myIdx == leaderIdx) {
-				Log::out << "#Output Intersection: " << mIntersection.size() << Log::endl;
-				Log::out << "#Expected Intersection: " << expected_intersection << Log::endl;
-				num_intersection = mIntersection.size();
-			}
+			/*	if (myIdx == leaderIdx) {
+			Log::out << "#Output Intersection: " << mIntersection.size() << Log::endl;
+			Log::out << "#Expected Intersection: " << expected_intersection << Log::endl;
+			num_intersection = mIntersection.size();
+			}*/
 
 			auto offlineTime = std::chrono::duration_cast<std::chrono::milliseconds>(initDone - start).count();
 			auto hashingTime = std::chrono::duration_cast<std::chrono::milliseconds>(hashingDone - initDone).count();
 			auto getOPRFTime = std::chrono::duration_cast<std::chrono::milliseconds>(getOPRFDone - hashingDone).count();
 			auto ssTime = std::chrono::duration_cast<std::chrono::milliseconds>(getSSDone - getOPRFDone).count();
-			auto intersectionTime = std::chrono::duration_cast<std::chrono::milliseconds>(getIntersection - getSSDone).count();
+			//auto intersectionTime = std::chrono::duration_cast<std::chrono::milliseconds>(getIntersection - getSSDone).count();
 
 			//divide by #thread since it uses single thread in this case
 			//NTL not thread safe
@@ -4418,7 +4418,7 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 				ssTime = ssTime / (nParties - 1);
 			}
 
-			double onlineTime = hashingTime + getOPRFTime + ssTime + intersectionTime;
+			double onlineTime = hashingTime + getOPRFTime + ssTime;
 
 			double time = offlineTime + onlineTime;
 			time /= 1000;
@@ -4461,7 +4461,7 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 				<< "hashingTime:  " << hashingTime << " ms\n"
 				<< "getOPRFTime:  " << getOPRFTime << " ms\n"
 				<< "ss2DirTime:  " << ssTime << " ms\n"
-				<< "intersection:  " << intersectionTime << " ms\n"
+				//<< "intersection:  " << intersectionTime << " ms\n"
 				<< "onlineTime:  " << onlineTime << " ms\n"
 				//<< "Bandwidth: Send: " << Mbps << " Mbps,\t Recv: " << MbpsRecv << " Mbps\n"
 				<< "Total time: " << time << " s\n";
@@ -4474,7 +4474,7 @@ void user_server(u64 user_repeat, u64 myIdx, u64 leaderIdx, u64 nParties, u64 se
 			hashingAvgTime += hashingTime;
 			getOPRFAvgTime += getOPRFTime;
 			ss2DirAvgTime += ssTime;
-			intersectionAvgTime += intersectionTime;
+			//intersectionAvgTime += intersectionTime;
 			onlineAvgTime += onlineTime;
 
 		}
@@ -4653,7 +4653,7 @@ void Cache_Test_Impl()
 			pThrds[pIdx] = std::thread([&, pIdx]() {
 				//	Channel_party_test(pIdx);
 
-				user_server(user_repeat, pIdx, nParties-2, nParties-1, mSet.size(), mSet, mPayload, mPRNGSeeds[pIdx], opt, 1);
+				user_server(user_repeat, pIdx, nParties-2, nParties-1, mSet.size(),1<<8, mSet, mPayload, mPRNGSeeds[pIdx], opt, 1);
 			});
 		}
 		for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)

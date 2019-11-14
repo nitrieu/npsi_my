@@ -31,6 +31,7 @@ namespace osuCrypto
         block mHashingSeed;
 		u64 mMaskSize;
 		u64 mOpt;
+		u64 mKprior;
 
 		std::vector<std::vector<block>> mNcoInputBuff; //hash(x)
 
@@ -42,6 +43,7 @@ namespace osuCrypto
 		SimpleHash mSimpleBins;
       
 
+		void init_priori(u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 k_prior, u64 statSecParam, u64 opt);
 		void init(u64 myIdx, u64 nParties, u64 mySetSize, u64 theirSetSize, u64 statSecParam, u64 opt);
 
 		void hashing2Bins(std::vector<block>& inputs, int numThreads);

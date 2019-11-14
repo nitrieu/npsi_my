@@ -1,52 +1,42 @@
-s[2]-dataSent(bytes)64610----------
-s[2]-dataSent(bytes)64610----------
+s[2]-dataSent(bytes)73840----------
 
 Client Idx: 1
 setSize: 32
-offlineTime:  845 ms
-hashingTime:  6 ms
-getOPRFTime:  170 ms
-ss2DirTime:  49 ms
-intersection:  0 ms
-onlineTime:  225 ms
-Total time: 1.07 s
-Total Comm: Send:0.0773115 MB------------------
-s[2]-dataSent(bytes)64610----------
+offlineTime:  983 ms
+hashingTime:  14 ms
+getOPRFTime:  146 ms
+ss2DirTime:  69 ms
+onlineTime:  229 ms
+Total time: 1.212 s
+Total Comm: Send:0.0861139 MB------------------
+s[2]-dataSent(bytes)73840----------
+
+Leader Idx: 2
+setSize: 32
+offlineTime:  1133 ms
+hashingTime:  5 ms
+getOPRFTime:  1 ms
+ss2DirTime:  86 ms
+onlineTime:  92 ms
+Total time: 1.225 s
+s[2]-dataSent(bytes)73840----------
 
 Client Idx: 1
 setSize: 32
-offlineTime:  855 ms
-hashingTime:  4 ms
-getOPRFTime:  161 ms
-ss2DirTime:  62 ms
-intersection:  0 ms
-onlineTime:  227 ms
-Total time: 1.082 s
-Total Comm: Send:0.0773115 MB------------------
-s[2]-dataSent(bytes)64610----------
-mIntersection.size(): 1
+offlineTime:  998 ms
+hashingTime:  5 ms
+getOPRFTime:  169 ms
+ss2DirTime:  73 ms
+onlineTime:  247 ms
+Total time: 1.245 s
+Total Comm: Send:0.0861139 MB------------------
+s[2]-dataSent(bytes)73840----------
 
 Leader Idx: 2
-#Output Intersection: 1
-#Expected Intersection: 32
 setSize: 32
-offlineTime:  1015 ms
-hashingTime:  3 ms
+offlineTime:  1164 ms
+hashingTime:  5 ms
 getOPRFTime:  1 ms
-ss2DirTime:  65 ms
-intersection:  0 ms
-onlineTime:  69 ms
-Total time: 1.084 s
-mIntersection.size(): 0
-
-Leader Idx: 2
-#Output Intersection: 0
-#Expected Intersection: 32
-setSize: 32
-offlineTime:  1015 ms
-hashingTime:  3 ms
-getOPRFTime:  1 ms
-ss2DirTime:  66 ms
-intersection:  0 ms
-onlineTime:  70 ms
-Total time: 1.085 s
+ss2DirTime:  82 ms
+onlineTime:  88 ms
+Total time: 1.252 s

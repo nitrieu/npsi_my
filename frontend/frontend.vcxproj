@@ -58,7 +58,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>D:\libs;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories);$(SolutionDir)\thirdparty\win\boost\stage\lib;C:/libs/boost\stage\lib;$(OutDir);$(SolutionDir)thirdparty\win\;D:/libs/boost\stage\lib;C:/libs/;C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(libOTeDir)\x64\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libOTe.lib;libPSI_Tests.lib;cryptoTools.lib;mpir\lib\x64\Debug\mpir.lib;mpir\lib\x64\Debug\mpirxx.lib;Miracl\x64\$(Configuration)\miracl.lib;cryptopp\x64\Output\$(Configuration)\cryptlib.lib;NTL\x64\$(Configuration)\NTL.lib;libOPRF.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libOTe.lib;libPSI_Tests.lib;cryptoTools.lib;Miracl\x64\$(Configuration)\miracl.lib;cryptopp\x64\Output\$(Configuration)\cryptlib.lib;NTL\x64\$(Configuration)\NTL.lib;libOPRF.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
