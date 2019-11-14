@@ -1,6 +1,26 @@
 #include <iostream>
 #include "Network/BtChannel.h"
 #include "Network/BtEndpoint.h"
+#include "Network/BtEndpoint.h" 
+
+#include "OPPRF/OPPRFReceiver.h"
+#include "OPPRF/OPPRFSender.h"
+
+#include <fstream>
+using namespace osuCrypto;
+#include "Tools/Tools.h"
+#include "Common/Defines.h"
+#include "NChooseOne/KkrtNcoOtReceiver.h"
+#include "NChooseOne/KkrtNcoOtSender.h"
+
+#include "NChooseOne/Oos/OosNcoOtReceiver.h"
+#include "NChooseOne/Oos/OosNcoOtSender.h"
+#include "Common/Log.h"
+#include "Common/Log1.h"
+#include "Common/Timer.h"
+#include "Crypto/PRNG.h"
+#include <numeric>
+#include <iostream>
 
 using namespace std;
 #include "Common/Defines.h"
@@ -11,7 +31,7 @@ using namespace osuCrypto;
 #include <numeric>
 #include "Common/Log.h"
 
-#include "cuckoo/cuckooTests.h"
+//#include "cuckoo/cuckooTests.h"
 
 void usage(const char* argv0)
 {
@@ -47,7 +67,7 @@ int main(int argc, char** argv)
 	std::vector<block> mSet;
 	std::vector<u64> mPayload;
 	
-	u64 setSize = 1 << 20, psiSecParam = 40, bitSize = 128;
+	u64 setSize = 1 << 16, psiSecParam = 40, bitSize = 128;
 
 	u64 nParties, tParties, opt_basedOPPRF;
 	u64 roundOPPRF;
@@ -100,10 +120,10 @@ int main(int argc, char** argv)
 	std::cout << "nParties: " << nParties << "\n";
 
 	// First phase
-	auto routine = [&](u64 user_repeat)
-	{
-		user_server(user_repeat, pIdx, nParties - 2, nParties - 1, mSet.size(), 1 << 8, mSet, mPayload, mPRNGSeeds[pIdx], opt_basedOPPRF, 1);
-	};
+	/*auto routine = [&](u64 user_repeat)
+	{*/
+		user_server(0, pIdx, nParties - 2, nParties - 1, mSet.size(), 1 << 8, mSet, mPayload, mPRNGSeeds[pIdx], TABLEb, 1);
+	/*};
 
 	std::vector<std::thread> thrds(2);
 	for (u64 i = 0; i < thrds.size(); ++i)
@@ -114,7 +134,7 @@ int main(int argc, char** argv)
 	}
 
 	for (auto& thrd : thrds)
-		thrd.join();
+		thrd.join();*/
 
 	return 0;
 #endif

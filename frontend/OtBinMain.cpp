@@ -31,7 +31,7 @@ std::vector<block> sendSet;
 std::vector<block> mSet;
 u64 nParties(5);
 
-u64 opt = 3;
+u64 opt = 0;
 
 bool isNTLThreadSafe = false;
 
@@ -3590,8 +3590,8 @@ void Transpose_Test()
 std::vector<u64> mPayload;
 void Cache_Test_Impl()
 {
-	u64 setSize = 1 << 16, psiSecParam = 40, bitSize = 128;
-	nParties = 4;
+	u64 setSize = 1 << 12, psiSecParam = 40, bitSize = 128;
+	nParties = 5;
 
 	PRNG prng(_mm_set_epi32(4253465, 3434565, 234435, 23987045));
 	mSet.resize(setSize);
@@ -3602,7 +3602,6 @@ void Cache_Test_Impl()
 		mPayload[i] = prng.get<u64>();
 	}
 
-	nParties = 4;
 
 	std::vector<std::vector<block>> mSeeds(nParties);
 	std::vector<std::vector<PRNG>> mPRNGSeeds(nParties);
@@ -3626,6 +3625,11 @@ void Cache_Test_Impl()
 		}
 	}
 
+//#define TABLEb 0 
+//#define SepPOLYb 1 
+//#define OnePOLYb 2
+//#define BFb 3
+
 	// First phase
 	auto routine = [&](u64 user_repeat)
 	{
@@ -3635,7 +3639,7 @@ void Cache_Test_Impl()
 			pThrds[pIdx] = std::thread([&, pIdx]() {
 				//	Channel_party_test(pIdx);
 
-				user_server(user_repeat, pIdx, nParties - 2, nParties - 1, mSet.size(), 1 << 8, mSet, mPayload, mPRNGSeeds[pIdx], opt, 1);
+				user_server(user_repeat, pIdx, nParties - 2, nParties - 1, mSet.size(), 1 << 8, mSet, mPayload, mPRNGSeeds[pIdx], TABLEb, 1);
 			});
 		}
 		for (u64 pIdx = 0; pIdx < pThrds.size(); ++pIdx)

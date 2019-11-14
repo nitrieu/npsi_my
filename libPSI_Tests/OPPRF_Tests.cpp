@@ -38,7 +38,7 @@ using namespace osuCrypto;
 //#define PRINT
 //#define BIN_PRINT
 
-u32 opt = 3;
+u32 opt = 0;
 
 bool isNTLThreadSafe = false;
 void testPointer(std::vector<block>* test)
