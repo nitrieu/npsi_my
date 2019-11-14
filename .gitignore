@@ -6,6 +6,8 @@
 *.user
 *.sln.docstates
 
+*CMakeFiles*
+CMakeFiles/*
 
 TestResults/
 linuxFrontend/
